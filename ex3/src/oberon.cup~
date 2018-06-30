@@ -250,10 +250,13 @@ fp_section_list ::=	fp_section_list: fp_s_l SEMICOLON: semicolon fp_section: fp_
 
 fp_section ::=		var_epsilon: v_e identifier_list: id_list COLON: colon type: t
 			{:
-				
+				RESULT = v_e + id_list + colon + t;
 			:};
 
-var_epsilon ::=		VAR
+var_epsilon ::=		VAR:var
+			{:
+				RESULT = var; 
+			:}
 			| /*eplison*/
 			{:
 				RESULT = "";
@@ -263,35 +266,51 @@ type ::=		IDENTIFIER: identifier
 			{:
 				RESULT = identifier ;	
 			:}
-			| INTEGER
+			| INTEGER: i
 			{:
+				RESULT = i;
 			:}
-			| BOOLEAN
+			| BOOLEAN: b
 			{:
-			
+				RESULT = b;
 			:}
 			| array_type: t
 			{:
-			
+				RESULT = t;
 			:}
 			| record_type: t
 			{:
-
+				RESULT = t;
 			:};
-array_type ::=		ARRAY expression OF type
+array_type ::=		ARRAY: array expression OF type
 			{:
-			
+				RESULT = array;
 			:};
 
-record_type ::=		RECORD
+record_type ::=		RECORD: record
 				field_lists
-			END;
+			END
+			{:
+				RESULT = record;
+			:};
 
-field_lists ::=		field_lists SEMICOLON field_list
-			| field_list;
+field_lists ::=		field_lists: f_ls SEMICOLON: semicolon field_list: f_l
+			{:
+				RESULT = f_ls + semicolon + f_l;
+			:}
+			| field_list: f_l
+			{:
+				RESULT = f_l;
+			:};
 
-field_list ::=		identifier_list COLON type
-			| /*epsilon*/;
+field_list ::=		identifier_list: id_list COLON: colon type: t
+			{:
+				RESULT = id_list + colon + t;
+			:}
+			| /*epsilon*/
+			{:
+				RESULT = "";
+			:};
 
 procedure_body ::=	declarations procedure_begin END IDENTIFIER: identifier
 			{:
@@ -300,7 +319,10 @@ procedure_body ::=	declarations procedure_begin END IDENTIFIER: identifier
 procedure_begin ::=	BEGIN statement_sequence | /*empty*/;
 
 				
-statement_sequence ::=	statement_sequence SEMICOLON statement
+statement_sequence ::=	statement_sequence: s_s SEMICOLON: semicolon statement: s
+			{:
+				RESULT = s_s + semicolon + s;
+			:}
 			| statement;
 
 statement ::=		assignment: a

@@ -930,7 +930,12 @@ class CUP$Parser$actions {
           case 29: // var_epsilon ::= VAR 
             {
               String RESULT =null;
-
+		int varleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int varright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String var = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		
+				RESULT = var; 
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("var_epsilon",42, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -964,7 +969,11 @@ class CUP$Parser$actions {
           case 32: // type ::= INTEGER 
             {
               String RESULT =null;
+		int ileft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int iright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				RESULT = i;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -974,8 +983,11 @@ class CUP$Parser$actions {
           case 33: // type ::= BOOLEAN 
             {
               String RESULT =null;
+		int bleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int bright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String b = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			
+				RESULT = b;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -989,7 +1001,7 @@ class CUP$Parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String t = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-			
+				RESULT = t;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1003,7 +1015,7 @@ class CUP$Parser$actions {
 		int tright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String t = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-
+				RESULT = t;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("type",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1013,8 +1025,11 @@ class CUP$Parser$actions {
           case 36: // array_type ::= ARRAY expression OF type 
             {
               String RESULT =null;
+		int arrayleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).left;
+		int arrayright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).right;
+		String array = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
 		
-			
+				RESULT = array;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("array_type",36, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1024,7 +1039,12 @@ class CUP$Parser$actions {
           case 37: // record_type ::= RECORD field_lists END 
             {
               String RESULT =null;
-
+		int recordleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int recordright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		String record = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		
+				RESULT = record;
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("record_type",37, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1033,7 +1053,18 @@ class CUP$Parser$actions {
           case 38: // field_lists ::= field_lists SEMICOLON field_list 
             {
               String RESULT =null;
-
+		int f_lsleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int f_lsright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		String f_ls = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int semicolonleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int semicolonright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		String semicolon = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		int f_lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int f_lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String f_l = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		
+				RESULT = f_ls + semicolon + f_l;
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("field_lists",38, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1042,7 +1073,12 @@ class CUP$Parser$actions {
           case 39: // field_lists ::= field_list 
             {
               String RESULT =null;
-
+		int f_lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int f_lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String f_l = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		
+				RESULT = f_l;
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("field_lists",38, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1051,7 +1087,18 @@ class CUP$Parser$actions {
           case 40: // field_list ::= identifier_list COLON type 
             {
               String RESULT =null;
-
+		int id_listleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int id_listright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		String id_list = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int colonleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int colonright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		String colon = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		int tleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int tright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String t = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		
+				RESULT = id_list + colon + t;
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("field_list",39, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1060,7 +1107,9 @@ class CUP$Parser$actions {
           case 41: // field_list ::= 
             {
               String RESULT =null;
-
+		
+				RESULT = "";
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("field_list",39, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1100,7 +1149,18 @@ class CUP$Parser$actions {
           case 45: // statement_sequence ::= statement_sequence SEMICOLON statement 
             {
               String RESULT =null;
-
+		int s_sleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
+		int s_sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
+		String s_s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int semicolonleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int semicolonright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		String semicolon = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		int sleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		
+				RESULT = s_s + semicolon + s;
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement_sequence",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1109,7 +1169,12 @@ class CUP$Parser$actions {
           case 46: // statement_sequence ::= statement 
             {
               String RESULT =null;
-
+		int sleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		
+				RESULT = s;
+			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement_sequence",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
