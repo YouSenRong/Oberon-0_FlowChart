@@ -732,14 +732,20 @@ class CUP$Parser$actions {
           case 16: // var_list ::= var_list identifier_list COLON type SEMICOLON 
             {
               String RESULT =null;
+		int v_lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).left;
+		int v_lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).right;
+		String v_l = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-4)).value;
 		int id_listleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).left;
 		int id_listright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).right;
 		String id_list = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
 		int tleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
 		int tright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String t = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		int semicolonleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
+		int semicolonright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
+		String semicolon = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-				
+				RESULT = v_l + id_list + t + semicolon;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("var_list",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -804,7 +810,7 @@ class CUP$Parser$actions {
             {
               String RESULT =null;
 		
-				RESULT = "";
+					RESULT = "";
 				
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_declaration",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -835,6 +841,7 @@ class CUP$Parser$actions {
 		int fp_s_lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String fp_s_l = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		
+				RESULT = "(" + fp_s_l + ")";
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("formal_parameters",22, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -845,7 +852,7 @@ class CUP$Parser$actions {
             {
               String RESULT =null;
 		
-				
+				RESULT = "(" + ")";
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("formal_parameters",22, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -869,10 +876,14 @@ class CUP$Parser$actions {
 		int fp_s_lleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
 		int fp_s_lright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
 		String fp_s_l = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int semicolonleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int semicolonright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		String semicolon = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		int fp_sleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int fp_sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String fp_s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				RESULT = fp_s_l + semicolon + fp_s;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("fp_section_list",23, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -886,6 +897,7 @@ class CUP$Parser$actions {
 		int fp_sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String fp_s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				RESULT = fp_s;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("fp_section_list",23, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -895,13 +907,20 @@ class CUP$Parser$actions {
           case 28: // fp_section ::= var_epsilon identifier_list COLON type 
             {
               String RESULT =null;
+		int v_eleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).left;
+		int v_eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).right;
+		String v_e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
 		int id_listleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).left;
 		int id_listright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).right;
 		String id_list = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		int colonleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int colonright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		String colon = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		int tleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).left;
 		int tright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String t = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				RESULT = v_e + id_list + colon + t;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("fp_section",24, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

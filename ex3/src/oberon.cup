@@ -196,9 +196,9 @@ var_declaration ::=	VAR:var var_list: v_l
 				RESULT = "";
 			:};
 
-var_list ::=		var_list identifier_list: id_list COLON type: t SEMICOLON
+var_list ::=		var_list: v_l identifier_list: id_list COLON type: t SEMICOLON: semicolon
 			{:
-				
+				RESULT = v_l + id_list + t + semicolon;
 			:}
 			| /*epsilon*/
 			{:
@@ -218,7 +218,7 @@ procedure_declaration ::=	procedure_declaration procedure_heading SEMICOLON
 				procedure_body SEMICOLON
 				| /*epsilon*/
 				{:
-				RESULT = "";
+					RESULT = "";
 				:};
 
 procedure_heading ::=	PROCEDURE IDENTIFIER: identifier formal_parameters: fp
@@ -228,25 +228,29 @@ procedure_heading ::=	PROCEDURE IDENTIFIER: identifier formal_parameters: fp
 
 formal_parameters ::=	LPARENTHESES fp_section_list: fp_s_l RPARENTHESES
 			{:
+				RESULT = "(" + fp_s_l + ")";
 			:}
 			| LPARENTHESES RPARENTHESES
 			{:
-				
+				RESULT = "(" + ")";
 			:}
 			| /*epsilon*/
 			{:
 				RESULT = "";
 			:};
 
-fp_section_list ::=	fp_section_list: fp_s_l SEMICOLON fp_section: fp_s
+fp_section_list ::=	fp_section_list: fp_s_l SEMICOLON: semicolon fp_section: fp_s
 			{:
+				RESULT = fp_s_l + semicolon + fp_s;
 			:}
 			| fp_section: fp_s
 			{:
+				RESULT = fp_s;
 			:};
 
-fp_section ::=		var_epsilon identifier_list: id_list COLON type: t
+fp_section ::=		var_epsilon: v_e identifier_list: id_list COLON: colon type: t
 			{:
+				RESULT = v_e + id_list + colon + t;
 			:};
 
 var_epsilon ::=		VAR
