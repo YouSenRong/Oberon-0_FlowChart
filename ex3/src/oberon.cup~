@@ -1,0 +1,500 @@
+/* this is a oberon.cup */
+/*
+author: you
+date: 2018/06/26
+*/
+
+/* ----------------------Preliminary Declarations Section--------------------*/
+import java_cup.runtime.*;
+import java.util.*;
+import exceptions.*;
+import callgraph.*;
+import flowchart.*;
+parser code
+{:
+	public HashMap<String, Integer> Identifier_Value_HashMap = new HashMap();
+	public HashMap<String, Integer> New_type_name = new HashMap();
+	public HashMap<String, Integer> Indetifier_Type_HashMap = new HashMap();
+	public HashMap<String, ArrayList<Integer>> Array_HashMap = new HashMap();
+
+	public CallGraph graph;
+	Module sampleModule = new Module("Sample");
+
+
+:}
+
+init with 
+{:
+	graph = new CallGraph();
+:}
+
+scan with {: return getScanner().next_token(); :};
+	
+
+
+/* ------------Declaration of Terminals and Non Terminals Section----------- */
+/* Terminals (tokens returned by the scanner).  */
+
+   /* Terminals that have no value are listed first and then terminals
+   that do have an value, in this case an integer value, are listed on
+   the next line down. */
+
+/* reserved word */
+terminal	MODULE, PROCEDURE, CONST, TYPE, VAR, RECORD, ARRAY, OF, WHILE, DO, IF, THEN, ELSIF, ELSE, BEGIN, END, INTEGER, BOOLEAN;
+
+/* logic operator */
+terminal	OR, AND, NOT;
+
+/* relation operator */
+terminal	EQUAL, UNEQUAL, LESS, LESS_EQUAL, GREAT, GREAT_EQUAL;
+
+/* addictive operator */
+terminal	PLUS, MINUS;
+
+/* multiplicative operator */
+terminal	TIMES, DIVIDE, MOD;
+
+/* type operator */
+terminal	COLON;
+
+/* selected_operator */
+terminal	DOT, LBRACKET, RBRACKET;
+
+/* assign operator */
+terminal	ASSIGN;
+
+/* seperated operator */
+terminal String	COMMA, SEMICOLON;
+
+/* paratheses */
+terminal	LPARENTHESES, RPARENTHESES;
+
+/* identifier */
+terminal String		IDENTIFIER;
+
+/* number */
+terminal String	NUMBER;
+
+/* Non terminals used in the grammar section.  */
+
+   /* Non terminals that have an object value are listed first and then
+   non terminals that have an integer value are listed.  An object
+   value means that it can be any type, it isn't set to a specific
+   type.  So it could be an Integer or a String or whatever. */
+
+non terminal String	program, module, module_begin;
+non terminal String	statement_sequence, statement, assignment, procedure_call, if_statement, elsif_statement, else_statement, while_statement;
+non terminal String	declarations, const_declaration, const_list, type_declaration, type_list, var_declaration, var_list;
+non terminal String	procedure_declaration, procedure_heading, procedure_body, procedure_begin;
+
+non terminal String	formal_parameters, fp_section_list, fp_section, actual_parameters, expression_list;
+
+non terminal String	expression, simple_expression, term, factor, expression_operator, simple_expression_operator, signed_operator, term_operator;
+
+non terminal String	type, array_type, record_type;
+
+non terminal String	field_lists, field_list, identifier_list;
+
+non terminal String	selector;
+
+non terminal		var_epsilon;
+
+/* -------------Precedence and Associatively of Terminals Section----------- */
+precedence right	ASSIGN;
+precedence left		OR, AND;
+precedence right	NOT;
+precedence left		EQUAL, UNEQUAL, LESS, LESS_EQUAL, GREAT, GREAT_EQUAL;
+precedence left		PLUS, MINUS;
+precedence left		TIMES, DIVIDE, MOD;
+precedence left 	LPARENTHESES;
+
+
+/* ----------------------------Grammar Section-------------------- */
+/* The grammar for our parser. */
+
+
+program ::= module:m
+	{:
+		System.out.println("Congratulation!!!");
+		Procedure proc = sampleModule.add("test_1");
+		proc.add(new PrimitiveStatement("Yous_test_1"));
+		sampleModule.show();
+	:};
+
+module ::=	MODULE:m IDENTIFIER: identifier_1 SEMICOLON
+			declarations
+		module_begin
+		END IDENTIFIER: identifier_2 DOT
+		{:
+		
+		:};
+
+module_begin ::=	BEGIN statement_sequence
+			{:
+			
+			:}
+			| /*epsilon*/;
+
+
+declarations ::=	const_declaration
+			type_declaration
+			var_declaration
+			procedure_declaration
+			{::};
+
+const_declaration ::=	CONST const_list | /*epsilon*/;
+
+const_list ::=		const_list IDENTIFIER:identifier EQUAL expression: e SEMICOLON
+			{:
+			
+			:}
+			| /*empty*/;
+
+type_declaration ::=	TYPE type_list | /*eplison*/;
+
+type_list ::=		type_list IDENTIFIER:identifier EQUAL type: t SEMICOLON
+			{:
+		
+			:}
+			| /*eplison*/;
+
+var_declaration ::=	VAR var_list | /*empty*/;
+
+var_list ::=		var_list identifier_list: id_list COLON type: t SEMICOLON
+			{:
+			:}
+			| /*epsilon*/;
+
+identifier_list ::=	identifier_list: id_list COMMA IDENTIFIER: identifier
+			{:
+					
+			:}
+			| IDENTIFIER: identifier
+			{:
+			:};
+
+procedure_declaration ::=	procedure_declaration procedure_heading SEMICOLON 
+				procedure_body SEMICOLON
+				| /*epsilon*/
+				{:
+				:};
+
+procedure_heading ::=	PROCEDURE IDENTIFIER: identifier formal_parameters: fp
+			{:
+			:};
+
+formal_parameters ::=	LPARENTHESES fp_section_list: fp_s_l RPARENTHESES
+			{:
+			:}
+			| LPARENTHESES RPARENTHESES
+			{:
+				
+			:}
+			| /*epsilon*/;
+
+fp_section_list ::=	fp_section_list: fp_s_l SEMICOLON fp_section: fp_s
+			{:
+			:}
+			| fp_section: fp_s
+			{:
+			:};
+
+fp_section ::=		var_epsilon identifier_list: id_list COLON type: t
+			{:
+			:};
+
+var_epsilon ::=		VAR
+			| /*eplison*/;
+
+type ::=		IDENTIFIER: identifier
+			{:
+				RESULT = identifier.toString();	
+			:}
+			| INTEGER
+			{:
+			:}
+			| BOOLEAN
+			{:
+			
+			:}
+			| array_type: t
+			{:
+			
+			:}
+			| record_type: t
+			{:
+
+			:};
+array_type ::=		ARRAY expression OF type
+			{:
+			
+			:};
+
+record_type ::=		RECORD
+				field_lists
+			END;
+
+field_lists ::=		field_lists SEMICOLON field_list
+			| field_list;
+
+field_list ::=		identifier_list COLON type
+			| /*epsilon*/;
+
+procedure_body ::=	declarations procedure_begin END IDENTIFIER: identifier
+			{:
+			:};
+
+procedure_begin ::=	BEGIN statement_sequence | /*empty*/;
+
+				
+statement_sequence ::=	statement_sequence SEMICOLON statement
+			| statement;
+
+statement ::=		assignment
+			| procedure_call
+			| if_statement
+			| while_statement
+			| /*epsilon*/
+			{:
+			:};
+
+while_statement ::=	WHILE expression: e DO
+				statement_sequence
+			END
+			{:
+			
+			:};
+
+if_statement ::=	IF expression: e THEN 
+				statement_sequence
+			elsif_statement
+			else_statement
+			END
+			{:
+			
+			:};
+
+elsif_statement ::=	elsif_statement
+			ELSIF expression THEN
+				statement_sequence
+			| /*epsilon*/
+			{:
+			:};
+
+else_statement ::=	ELSE statement_sequence
+			| /*epsilon*/
+			{:
+			:};
+
+procedure_call ::=	IDENTIFIER actual_parameters: ap
+			{:
+				
+			:};
+			
+actual_parameters ::=	LPARENTHESES expression_list:ex_l RPARENTHESES
+			{:
+				
+			:}
+			| LPARENTHESES RPARENTHESES
+			{:
+			:}
+			|
+			{:
+			:};
+
+expression_list ::=	expression_list: ex_l COMMA expression: e
+			{:
+					
+			:}
+			| expression: e
+			{:
+			
+			:};
+
+assignment ::=		IDENTIFIER:identifier selector: s ASSIGN expression: e
+			{:
+
+			:};
+
+expression ::=		simple_expression: s_e_1 expression_operator: e_o simple_expression: s_e_2
+			{:
+				/*RESULT = s_e_1.toString() + e_o.toString() + s_e_2.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| simple_expression: s_e
+			{:
+				/*RESULT = s_e.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| expression_operator simple_expression
+			{:
+				if (true) throw new MissingOperandException();
+			:}
+			| simple_expression expression_operator
+			{:
+				if (true) throw new MissingOperandException();
+			:};
+
+expression_operator ::=	EQUAL: equal 
+			{:
+				/*RESULT = equal.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| UNEQUAL: unequal
+			{:
+				/*RESULT = unequal.toString();*/
+				/*System.out.println(RESULT);*/
+			:} 
+			| LESS: less
+			{:
+				/*RESULT = less.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| LESS_EQUAL: less_equal
+			{:
+				/*RESULT = less_equal.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| GREAT: great
+			{:
+				/*RESULT = great.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| GREAT_EQUAL:great_less
+			{:
+				/*RESULT = great_less.toString();*/
+				/*System.out.println(RESULT);*/
+			:};
+
+simple_expression ::=	simple_expression: s_e simple_expression_operator: s_e_o term: t
+			{:
+				/*RESULT = s_e.toString() + s_e_o.toString() + t.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| signed_operator: s_o term: t
+			{:
+				/*RESULT = s_o.toString() + t.toString();*/
+			:}
+			| OR term
+			{:
+				if(true) throw new MissingOperandException();
+			:};
+			
+signed_operator ::=	PLUS: plus
+			{:
+				/*RESULT = plus.toString();*/
+				/*System.out.println(RESULT);*/
+				
+			:}
+			| MINUS: minus
+			{:
+				/*RESULT = minus.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| /*epsilon*/;
+
+simple_expression_operator ::=	PLUS: plus
+				{:
+					/*RESULT = plus.toString();*/
+					/*System.out.println(RESULT);*/
+				
+				:}	
+				| MINUS: minus
+				{:
+					/*RESULT = minus.toString();*/
+					/*System.out.println(RESULT);*/
+				:}
+				| OR: or
+				{:
+					/*RESULT = or.toString();*/
+					/*System.out.println(RESULT);*/
+				:};
+
+term ::=		term: t term_operator: t_o factor: f
+			{:
+				/*RESULT = t.toString() + t_o.toString() + f.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| factor: f
+			{:
+				/*RESULT = f.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			/*| term term_operator
+			{:
+				if(true) throw new MissingOperandException();
+			:}*/
+			| term_operator factor
+			{:
+				if(true) throw new MissingOperandException(); 
+			:}
+			| term factor
+			{:
+				if(true) throw new MissingOperatorException();
+			:};
+
+term_operator ::=	TIMES: times
+			{:
+				/*RESULT = times.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| DIVIDE: divides
+			{:
+				/*RESULT = divides.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| MOD: mod
+			{:
+				/*RESULT = mod.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| AND: and
+			{:
+				/*RESULT = and.toString();*/
+				/*System.out.println(RESULT);*/
+			:};
+
+factor ::=		IDENTIFIER: identifier selector: s
+			{:
+				//System.out.println(identifier.toString());
+				/*RESULT = identifier.toString() + s.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| NUMBER: number
+			{:
+				System.out.println(number);
+				/*RESULT = number.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| LPARENTHESES: lparen expression: e RPARENTHESES: rparen
+			{:
+				/*RESULT = lparen.toString() + e.toString() + rparen.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| NOT: not factor: f
+			{:
+				/*RESULT = not.toString() + f.toString();*/
+				/*System.out.println(RESULT);*/
+			:};
+
+
+selector ::=		selector: s DOT: dot IDENTIFIER: identifier
+			{:
+				/*RESULT = s.toString() + dot.toString() + identifier.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| selector:s LBRACKET: lbracket expression: e RBRACKET: rbracket
+			{:
+				/*RESULT = s.toString() + lbracket.toString() + e.toString() + rbracket.toString();*/
+				/*System.out.println(RESULT);*/
+			:}
+			| /*epsilon*/
+			{:
+				/*RESULT = "";*/
+				/*System.out.println(RESULT);*/
+			:};
+
+
+
+
+
