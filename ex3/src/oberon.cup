@@ -18,7 +18,9 @@ parser code
 	public HashMap<String, ArrayList<Integer>> Array_HashMap = new HashMap();
 
 	public CallGraph graph;
-	Module sampleModule = new Module("Sample");
+	
+	Module main_Module;
+	Procedure procedure;
 
 
 :}
@@ -26,6 +28,7 @@ parser code
 init with 
 {:
 	graph = new CallGraph();
+	main_Module = new Module("Oberon-0 FlowChart");
 :}
 
 scan with {: return getScanner().next_token(); :};
@@ -40,34 +43,34 @@ scan with {: return getScanner().next_token(); :};
    the next line down. */
 
 /* reserved word */
-terminal	MODULE, PROCEDURE, CONST, TYPE, VAR, RECORD, ARRAY, OF, WHILE, DO, IF, THEN, ELSIF, ELSE, BEGIN, END, INTEGER, BOOLEAN;
+terminal String	MODULE, PROCEDURE, CONST, TYPE, VAR, RECORD, ARRAY, OF, WHILE, DO, IF, THEN, ELSIF, ELSE, BEGIN, END, INTEGER, BOOLEAN;
 
 /* logic operator */
-terminal	OR, AND, NOT;
+terminal String	OR, AND, NOT;
 
 /* relation operator */
-terminal	EQUAL, UNEQUAL, LESS, LESS_EQUAL, GREAT, GREAT_EQUAL;
+terminal String	EQUAL, UNEQUAL, LESS, LESS_EQUAL, GREAT, GREAT_EQUAL;
 
 /* addictive operator */
-terminal	PLUS, MINUS;
+terminal String	PLUS, MINUS;
 
 /* multiplicative operator */
-terminal	TIMES, DIVIDE, MOD;
+terminal String	TIMES, DIVIDE, MOD;
 
 /* type operator */
-terminal	COLON;
+terminal String	COLON;
 
 /* selected_operator */
-terminal	DOT, LBRACKET, RBRACKET;
+terminal String	DOT, LBRACKET, RBRACKET;
 
 /* assign operator */
-terminal	ASSIGN;
+terminal String	ASSIGN;
 
 /* seperated operator */
 terminal String	COMMA, SEMICOLON;
 
 /* paratheses */
-terminal	LPARENTHESES, RPARENTHESES;
+terminal String	LPARENTHESES, RPARENTHESES;
 
 /* identifier */
 terminal String		IDENTIFIER;
@@ -97,7 +100,7 @@ non terminal String	field_lists, field_list, identifier_list;
 
 non terminal String	selector;
 
-non terminal		var_epsilon;
+non terminal String	var_epsilon;
 
 /* -------------Precedence and Associatively of Terminals Section----------- */
 precedence right	ASSIGN;
@@ -116,9 +119,9 @@ precedence left 	LPARENTHESES;
 program ::= module:m
 	{:
 		System.out.println("Congratulation!!!");
-		Procedure proc = sampleModule.add("test_1");
+		Procedure proc = main_Module.add("test_1");
 		proc.add(new PrimitiveStatement("Yous_test_1"));
-		sampleModule.show();
+		main_Module.show();
 	:};
 
 module ::=	MODULE:m IDENTIFIER: identifier_1 SEMICOLON
@@ -133,54 +136,94 @@ module_begin ::=	BEGIN statement_sequence
 			{:
 			
 			:}
-			| /*epsilon*/;
-
-
-declarations ::=	const_declaration
-			type_declaration
-			var_declaration
-			procedure_declaration
-			{::};
-
-const_declaration ::=	CONST const_list | /*epsilon*/;
-
-const_list ::=		const_list IDENTIFIER:identifier EQUAL expression: e SEMICOLON
+			| /*epsilon*/
 			{:
-			
-			:}
-			| /*empty*/;
+				RESULT = "";
+			:};
 
-type_declaration ::=	TYPE type_list | /*eplison*/;
 
-type_list ::=		type_list IDENTIFIER:identifier EQUAL type: t SEMICOLON
+declarations ::=	const_declaration: c_d
+			type_declaration: c_t
+			var_declaration: v_d
+			procedure_declaration: p_d
 			{:
-		
-			:}
-			| /*eplison*/;
+				procedure.add(new PrimitiveStatement(c_d + "\n" + c_t + "\n" + v_d + "\n" + p_d +"\n"));
+				//RESULT = c_d + c_t + v_d + p_d;
+			:};
 
-var_declaration ::=	VAR var_list | /*empty*/;
+const_declaration ::=	CONST const_list: c_l
+			{:
+				RESULT = "const" + c_l;
+			:} 
+			| /*epsilon*/
+			{:
+				RESULT = "";
+			:};
+
+const_list ::=		const_list: c_l IDENTIFIER:identifier EQUAL: equal expression: e SEMICOLON: semicolon
+			{:
+				RESULT = c_l + identifier + equal + e + semicolon;
+			:}
+			| /*empty*/
+			{:
+				RESULT = "";
+			:};
+
+type_declaration ::=	TYPE:t type_list : t_l
+			{:
+				RESULT = t + t_l;
+			:}
+			| /*eplison*/
+			{:
+				RESULT = "";
+			:};
+
+type_list ::=		type_list:t_l IDENTIFIER:identifier EQUAL: equal type: t SEMICOLON: semicolon
+			{:
+				RESULT = t_l + identifier + equal + t + semicolon;
+			:}
+			| /*eplison*/
+			{:
+				RESULT = "";
+			:};
+
+var_declaration ::=	VAR:var var_list: v_l
+			{:
+				RESULT = var + v_l;
+			:}
+			| /*empty*/
+			{:
+				RESULT = "";
+			:};
 
 var_list ::=		var_list identifier_list: id_list COLON type: t SEMICOLON
 			{:
+				
 			:}
-			| /*epsilon*/;
-
-identifier_list ::=	identifier_list: id_list COMMA IDENTIFIER: identifier
+			| /*epsilon*/
 			{:
-					
+				RESULT = "";
+			:};
+
+identifier_list ::=	identifier_list: id_list COMMA: comma IDENTIFIER: identifier
+			{:
+				RESULT = id_list + comma + identifier;
 			:}
 			| IDENTIFIER: identifier
 			{:
+				RESULT = identifier;
 			:};
 
 procedure_declaration ::=	procedure_declaration procedure_heading SEMICOLON 
 				procedure_body SEMICOLON
 				| /*epsilon*/
 				{:
+				RESULT = "";
 				:};
 
 procedure_heading ::=	PROCEDURE IDENTIFIER: identifier formal_parameters: fp
 			{:
+				procedure = main_Module.add(identifier);
 			:};
 
 formal_parameters ::=	LPARENTHESES fp_section_list: fp_s_l RPARENTHESES
@@ -190,7 +233,10 @@ formal_parameters ::=	LPARENTHESES fp_section_list: fp_s_l RPARENTHESES
 			{:
 				
 			:}
-			| /*epsilon*/;
+			| /*epsilon*/
+			{:
+				RESULT = "";
+			:};
 
 fp_section_list ::=	fp_section_list: fp_s_l SEMICOLON fp_section: fp_s
 			{:
@@ -204,11 +250,14 @@ fp_section ::=		var_epsilon identifier_list: id_list COLON type: t
 			:};
 
 var_epsilon ::=		VAR
-			| /*eplison*/;
+			| /*eplison*/
+			{:
+				RESULT = "";
+			:};
 
 type ::=		IDENTIFIER: identifier
 			{:
-				RESULT = identifier.toString();	
+				RESULT = identifier ;	
 			:}
 			| INTEGER
 			{:
@@ -250,19 +299,26 @@ procedure_begin ::=	BEGIN statement_sequence | /*empty*/;
 statement_sequence ::=	statement_sequence SEMICOLON statement
 			| statement;
 
-statement ::=		assignment
-			| procedure_call
+statement ::=		assignment: a
+			{:
+				procedure.add(new PrimitiveStatement(a));
+			:}
+			| procedure_call: p_c
+			{:
+				procedure.add(new PrimitiveStatement(p_c));
+			:}
 			| if_statement
 			| while_statement
 			| /*epsilon*/
 			{:
+				RESULT = "";
 			:};
 
 while_statement ::=	WHILE expression: e DO
 				statement_sequence
 			END
 			{:
-			
+					procedure.add(new PrimitiveStatement("WHILE Statement"));
 			:};
 
 if_statement ::=	IF expression: e THEN 
@@ -271,59 +327,63 @@ if_statement ::=	IF expression: e THEN
 			else_statement
 			END
 			{:
-			
+				procedure.add(new PrimitiveStatement("IF Statement"));
 			:};
 
 elsif_statement ::=	elsif_statement
-			ELSIF expression THEN
+			ELSIF:elsif expression:e THEN
 				statement_sequence
 			| /*epsilon*/
 			{:
+				RESULT = "";
 			:};
 
-else_statement ::=	ELSE statement_sequence
+else_statement ::=	ELSE:e statement_sequence: s_s
 			| /*epsilon*/
 			{:
+				RESULT = "";
 			:};
 
-procedure_call ::=	IDENTIFIER actual_parameters: ap
+procedure_call ::=	IDENTIFIER: identifier actual_parameters: a_p
 			{:
-				
+				RESULT = identifier + a_p;
 			:};
 			
-actual_parameters ::=	LPARENTHESES expression_list:ex_l RPARENTHESES
+actual_parameters ::=	LPARENTHESES:lp expression_list:ex_l RPARENTHESES: rp
 			{:
-				
+				RESULT = lp + ex_l + rp;
 			:}
-			| LPARENTHESES RPARENTHESES
+			| LPARENTHESES:lp RPARENTHESES:rp
 			{:
+				RESULT = "(" + ")";
 			:}
-			|
+			| /*epsilon*/
 			{:
+				RESULT = "";
 			:};
 
-expression_list ::=	expression_list: ex_l COMMA expression: e
+expression_list ::=	expression_list: ex_l COMMA: comma expression: e
 			{:
-					
+				RESULT = ex_l + comma + e;	
 			:}
 			| expression: e
 			{:
-			
+				RESULT = e;
 			:};
 
-assignment ::=		IDENTIFIER:identifier selector: s ASSIGN expression: e
+assignment ::=		IDENTIFIER:identifier selector: s ASSIGN: assign expression: e
 			{:
-
+				RESULT = identifier + s + assign + e;
 			:};
 
 expression ::=		simple_expression: s_e_1 expression_operator: e_o simple_expression: s_e_2
 			{:
-				/*RESULT = s_e_1.toString() + e_o.toString() + s_e_2.toString();*/
+				RESULT = s_e_1  + e_o  + s_e_2 ;
 				/*System.out.println(RESULT);*/
 			:}
 			| simple_expression: s_e
 			{:
-				/*RESULT = s_e.toString();*/
+				RESULT = s_e ;
 				/*System.out.println(RESULT);*/
 			:}
 			| expression_operator simple_expression
@@ -337,43 +397,43 @@ expression ::=		simple_expression: s_e_1 expression_operator: e_o simple_express
 
 expression_operator ::=	EQUAL: equal 
 			{:
-				/*RESULT = equal.toString();*/
+				RESULT = equal ;
 				/*System.out.println(RESULT);*/
 			:}
 			| UNEQUAL: unequal
 			{:
-				/*RESULT = unequal.toString();*/
+				RESULT = unequal ;
 				/*System.out.println(RESULT);*/
 			:} 
 			| LESS: less
 			{:
-				/*RESULT = less.toString();*/
+				RESULT = less ;
 				/*System.out.println(RESULT);*/
 			:}
 			| LESS_EQUAL: less_equal
 			{:
-				/*RESULT = less_equal.toString();*/
+				RESULT = less_equal ;
 				/*System.out.println(RESULT);*/
 			:}
 			| GREAT: great
 			{:
-				/*RESULT = great.toString();*/
+				RESULT = great ;
 				/*System.out.println(RESULT);*/
 			:}
 			| GREAT_EQUAL:great_less
 			{:
-				/*RESULT = great_less.toString();*/
+				RESULT = great_less ;
 				/*System.out.println(RESULT);*/
 			:};
 
 simple_expression ::=	simple_expression: s_e simple_expression_operator: s_e_o term: t
 			{:
-				/*RESULT = s_e.toString() + s_e_o.toString() + t.toString();*/
+				RESULT = s_e  + s_e_o  + t ;
 				/*System.out.println(RESULT);*/
 			:}
 			| signed_operator: s_o term: t
 			{:
-				/*RESULT = s_o.toString() + t.toString();*/
+				RESULT = s_o  + t ;
 			:}
 			| OR term
 			{:
@@ -382,48 +442,44 @@ simple_expression ::=	simple_expression: s_e simple_expression_operator: s_e_o t
 			
 signed_operator ::=	PLUS: plus
 			{:
-				/*RESULT = plus.toString();*/
+				RESULT = plus ;
 				/*System.out.println(RESULT);*/
 				
 			:}
 			| MINUS: minus
 			{:
-				/*RESULT = minus.toString();*/
+				RESULT = minus ;
 				/*System.out.println(RESULT);*/
 			:}
 			| /*epsilon*/;
 
 simple_expression_operator ::=	PLUS: plus
 				{:
-					/*RESULT = plus.toString();*/
+					RESULT = plus ;
 					/*System.out.println(RESULT);*/
 				
 				:}	
 				| MINUS: minus
 				{:
-					/*RESULT = minus.toString();*/
+					RESULT = minus ;
 					/*System.out.println(RESULT);*/
 				:}
 				| OR: or
 				{:
-					/*RESULT = or.toString();*/
+					/*RESULT = or ;*/
 					/*System.out.println(RESULT);*/
 				:};
 
 term ::=		term: t term_operator: t_o factor: f
 			{:
-				/*RESULT = t.toString() + t_o.toString() + f.toString();*/
+				RESULT = t  + t_o  + f ;
 				/*System.out.println(RESULT);*/
 			:}
 			| factor: f
 			{:
-				/*RESULT = f.toString();*/
+				RESULT = f ;
 				/*System.out.println(RESULT);*/
 			:}
-			/*| term term_operator
-			{:
-				if(true) throw new MissingOperandException();
-			:}*/
 			| term_operator factor
 			{:
 				if(true) throw new MissingOperandException(); 
@@ -435,66 +491,60 @@ term ::=		term: t term_operator: t_o factor: f
 
 term_operator ::=	TIMES: times
 			{:
-				/*RESULT = times.toString();*/
+				RESULT = times ;
 				/*System.out.println(RESULT);*/
 			:}
 			| DIVIDE: divides
 			{:
-				/*RESULT = divides.toString();*/
+				RESULT = divides ;
 				/*System.out.println(RESULT);*/
 			:}
 			| MOD: mod
 			{:
-				/*RESULT = mod.toString();*/
+				RESULT = mod ;
 				/*System.out.println(RESULT);*/
 			:}
 			| AND: and
 			{:
-				/*RESULT = and.toString();*/
+				RESULT = and ;
 				/*System.out.println(RESULT);*/
 			:};
 
 factor ::=		IDENTIFIER: identifier selector: s
 			{:
-				//System.out.println(identifier.toString());
-				/*RESULT = identifier.toString() + s.toString();*/
+				RESULT = identifier  + s ;
 				/*System.out.println(RESULT);*/
 			:}
 			| NUMBER: number
 			{:
-				//System.out.println(number);
-				/*RESULT = number.toString();*/
+				RESULT = number ;
 				/*System.out.println(RESULT);*/
 			:}
 			| LPARENTHESES: lparen expression: e RPARENTHESES: rparen
 			{:
-				/*RESULT = lparen.toString() + e.toString() + rparen.toString();*/
+				RESULT = lparen  + e  + rparen ;
 				/*System.out.println(RESULT);*/
 			:}
 			| NOT: not factor: f
 			{:
-				/*RESULT = not.toString() + f.toString();*/
+				RESULT = not  + f ;
 				/*System.out.println(RESULT);*/
 			:};
 
 
 selector ::=		selector: s DOT: dot IDENTIFIER: identifier
 			{:
-				/*RESULT = s.toString() + dot.toString() + identifier.toString();*/
+				RESULT = s  + dot  + identifier ;
 				/*System.out.println(RESULT);*/
 			:}
 			| selector:s LBRACKET: lbracket expression: e RBRACKET: rbracket
 			{:
-				/*RESULT = s.toString() + lbracket.toString() + e.toString() + rbracket.toString();*/
+				RESULT = s + lbracket + e + rbracket ;
 				/*System.out.println(RESULT);*/
 			:}
 			| /*epsilon*/
 			{:
-				/*RESULT = "";*/
+				RESULT = "";
 				/*System.out.println(RESULT);*/
 			:};
-
-
-
-
 
