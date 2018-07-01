@@ -60,7 +60,7 @@ MODULE YousOberon_Program;
 
 	PROCEDURE output;
 		VAR i : INTEGER;
-		
+
 	BEGIN
 		i := 0;
 		while i < size DO

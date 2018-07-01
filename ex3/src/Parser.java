@@ -447,11 +447,12 @@ public class Parser extends java_cup.runtime.lr_parser {
     }
 
 
-
-	//public CallGraph graph;
-	
+	// 绘制函数流程图的接口类
 	Module main_Module;
+	// 绘制函数流程图的函数主体的类
 	Procedure procedure;
+	/* 绘制函数流程图中while循环部分的WhileStatement对象的栈和IfStatement对象的栈，
+	因为while循环可能会有多层循环或者if语句条件判断的多层嵌套 */
 	Stack<WhileStatement> while_stack = new Stack();
 	Stack<IfStatement>  if_stack = new Stack();
 	/* a stack to store the current state of the statement 0:procedure, 1:while_statement, 2:if_statement */
@@ -575,25 +576,34 @@ class CUP$Parser$actions {
 		int p_dright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String p_d = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-				String str_declarations = "";
-				if(c_d != null && c_d.length() > 0)
+				/* 
+				因为不绘制模块中的东西，所以以状态栈int_stack中是否有值为标志，查看当前的流程图绘制对象的范围。
+				状态栈中不为空，则表示当前流程图绘制范围在函数中，目前的declaration可以添加到流程图中，如果为空，则标志
+				当前对象绘制范围为模块module。
+				*/
+				if(!int_stack.empty())
 				{
-					str_declarations = str_declarations + c_d + "<br>";
+					String str_declarations = "";
+					if(c_d != null && c_d.length() > 0)
+					{
+						str_declarations = str_declarations + c_d + "<br>";
+					}
+					if(t_d != null && t_d.length() > 0)
+					{
+						str_declarations = str_declarations + t_d + "<br>";
+					}
+					if(v_d != null && v_d.length() > 0)
+					{
+						str_declarations = str_declarations + v_d + "<br>";
+					}
+					if(p_d != null && p_d.length() > 0)
+					{
+						str_declarations = str_declarations + p_d + "<br>";
+					}
+					// add the declarations to the flowchart
+					procedure.add(new PrimitiveStatement(str_declarations));
 				}
-				if(t_d != null && t_d.length() > 0)
-				{
-					str_declarations = str_declarations + t_d + "<br>";
-				}
-				if(v_d != null && v_d.length() > 0)
-				{
-					str_declarations = str_declarations + v_d + "<br>";
-				}
-				if(p_d != null && p_d.length() > 0)
-				{
-					str_declarations = str_declarations + p_d + "<br>";
-				}
-				// add the declarations to the flowchart
-				procedure.add(new PrimitiveStatement(str_declarations));
+
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("declarations",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -859,6 +869,7 @@ class CUP$Parser$actions {
 		int fpright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String fp = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				// 流程图的从这里开始，向int_stack中压入0，表示当前的流程图位置是函数
 				int_stack.push(new Integer(0));
 				procedure = main_Module.add(identifier);
 			
@@ -1155,6 +1166,10 @@ class CUP$Parser$actions {
 		int identifierright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String identifier = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				/*
+				函数结束，从状态栈int_stack中弹出栈顶，表示一个函数绘制结束，
+				因此当一个函数的流程图绘制结束时，int_stack栈为空。
+				*/
 				int_stack.pop();
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_body",21, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1223,8 +1238,13 @@ class CUP$Parser$actions {
 		int aright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String a = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				/* 
+				判断int_stack是否为空，是为了判断函数绘制位置是在procedure范围内，还是在module范围内，
+				int_stack为空则是在module范围内，int_stack不为空则是在precedure范围内。
+				*/
 				if(!int_stack.empty())
-				{
+				{	
+					// 判断当前的绘制流程图的状态，然后向当前绘制流程图的对象中添加语句
 					if(int_stack.peek() == 0)
 					{
 						procedure.add(new PrimitiveStatement(a));
@@ -1242,7 +1262,6 @@ class CUP$Parser$actions {
 						if_stack.peek().getFalseBody().add(new PrimitiveStatement(a));
 					}
 				}
-
 				
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("statement",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1257,8 +1276,13 @@ class CUP$Parser$actions {
 		int p_cright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String p_c = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				/* 
+				判断int_stack是否为空，是为了判断函数绘制位置是在procedure范围内，还是在module范围内，
+				int_stack为空则是在module范围内，int_stack不为空则是在precedure范围内。
+				*/
 				if(!int_stack.empty())
 				{
+					// 判断当前的绘制流程图的状态，然后向当前绘制流程图的对象中添加语句
 					if(int_stack.peek() == 0)
 					{
 						procedure.add(new PrimitiveStatement(p_c));
@@ -1318,18 +1342,24 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 	
+				/*
+				绘制while循环中的流程图
+				*/
+				// 声明一个while循环流程图的对象
 				WhileStatement wstmt = new WhileStatement(e);
+				// 判断当前是否在procedure中
 				if(!int_stack.empty())
 				{
+					// 判断当前的绘制流程图的状态，然后向当前绘制流程图的对象中添加while循环流程图绘制对象
 					if(int_stack.peek() == 0)
 					{
 						procedure.add(wstmt);
 					}
-					else if(int_stack.peek() == 1 )
+					else if(int_stack.peek() == 1)
 					{
 						while_stack.peek().getLoopBody().add(wstmt);
 					}
-					else if(int_stack.peek() == 2 )
+					else if(int_stack.peek() == 2)
 					{	
 						if_stack.peek().getTrueBody().add(wstmt);
 					}
@@ -1338,7 +1368,9 @@ class CUP$Parser$actions {
 						if_stack.peek().getFalseBody().add(wstmt);
 					}
 				}
+				// 向栈中push一个整数1，表示现在的流程图绘制对象转换为while流程图绘制对象
 				int_stack.push(new Integer(1));
+				// 向栈中添加对象while循环的流程图绘制对象
 				while_stack.push(wstmt);
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("NT$0",43, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1355,7 +1387,9 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-4)).value;
 		
+				// while 循环结束弹出状态标志
 				int_stack.pop();
+				// while 循环结束弹出while循环流程图绘制对象
 				while_stack.pop();
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("while_statement",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1370,9 +1404,15 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 
+				/*
+				绘制if条件语句的流程图
+				*/
+				// 声明一个if条件语句流程图的对象
 				IfStatement ifstmt = new IfStatement(e);
+				// 判断当前是否在procedure中
 				if(!int_stack.empty())
 				{
+					// 判断当前的绘制流程图的状态，然后向当前绘制流程图的对象中添加if条件流程图绘制对象
 					if(int_stack.peek() == 0)
 					{
 						procedure.add(ifstmt);
@@ -1390,7 +1430,9 @@ class CUP$Parser$actions {
 						if_stack.peek().getFalseBody().add(ifstmt);
 					}
 				}
+				// 向栈中push一个整数2，表示现在的流程图绘制对象转换为if流程图绘制对象
 				int_stack.push(new Integer(2));
+				// 向栈中添加if语句的流程图绘制对象
 				if_stack.push(ifstmt);
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("NT$1",44, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1407,7 +1449,10 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-6)).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-6)).value;
 		
+				// if语句结束弹出状态标志
 				int_stack.pop();
+				// if语句结束弹出if语句流程图绘制图像
+				if_stack.pop();
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("if_statement",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-7)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1424,9 +1469,16 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 
+				/*
+				绘制elsif条件语句的流程图
+				*/
+				// 声明一个if条件语句流程图的对象
 				IfStatement ifstmt = new IfStatement(e);
+				// 把if条件语句流程图对象添加到上一层if语句的false分支中
 				if_stack.peek().getFalseBody().add(ifstmt);
+				// 向栈中push一个整数2，表示现在的流程图绘制对象转换为if流程图绘制对象
 				int_stack.push(new Integer(2));
+				// 向栈中添加if语句的流程图绘制对象
 				if_stack.push(ifstmt);
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("NT$2",45, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1446,8 +1498,11 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
 		
-				if_stack.pop();
+				// if语句结束弹出状态标志
 				int_stack.pop();
+				// if语句结束弹出if语句流程图绘制图像
+				if_stack.pop();
+				
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("elsif_statement",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1472,6 +1527,7 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 
+				// 向状态栈int_stack中添加一个3，表示现在的流程图绘制状态应该添加到if语句的false分支
 				int_stack.push(new Integer(3));
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("NT$3",46, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -1491,6 +1547,7 @@ class CUP$Parser$actions {
 		int s_sright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String s_s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				// 弹出状态栈中的一个状态
 				int_stack.pop();
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("else_statement",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);

@@ -60,12 +60,12 @@ MODULE YousOberon_Program;
 
 	PROCEDURE output;
 		VAR i : INTEGER;
+	BEGIN
 		i := 0;
 		while i < size DO
 			WRITE(sort_array[i]);
 			WRITELN();
 		END;
-	BEGIN
 	END output;
 	
 BEGIN
