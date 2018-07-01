@@ -791,43 +791,43 @@ public class OberonScanner {
       else {
         switch (zzAction < 0 ? zzAction : ZZ_ACTION[zzAction]) {
           case 1: 
-            { System.out.print(yytext()); return OberonLexical.Identifier;
+            { return OberonLexical.Identifier;
             }
           case 19: break;
           case 2: 
-            { System.out.print(yytext()); return OberonLexical.Logic_operator;
+            { return OberonLexical.Logic_operator;
             }
           case 20: break;
           case 3: 
-            { System.out.print(yytext()); return OberonLexical.Relational_operator;
+            { return OberonLexical.Relational_operator;
             }
           case 21: break;
           case 4: 
-            { System.out.print(yytext()); return OberonLexical.Addictive_operator;
+            { return OberonLexical.Addictive_operator;
             }
           case 22: break;
           case 5: 
-            { System.out.print(yytext()); return OberonLexical.Multiplicative_operator;
+            { return OberonLexical.Multiplicative_operator;
             }
           case 23: break;
           case 6: 
-            { System.out.print(yytext()); return OberonLexical.Type_operator;
+            { return OberonLexical.Type_operator;
             }
           case 24: break;
           case 7: 
-            { System.out.print(yytext()); return OberonLexical.Selected_operator;
+            { return OberonLexical.Selected_operator;
             }
           case 25: break;
           case 8: 
-            { System.out.print(yytext()); return OberonLexical.Seperated_operator;
+            { return OberonLexical.Seperated_operator;
             }
           case 26: break;
           case 9: 
-            { System.out.print(yytext()); return OberonLexical.Paratheses;
+            { return OberonLexical.Paratheses;
             }
           case 27: break;
           case 10: 
-            { System.out.print(yytext()); return OberonLexical.Number;
+            { return OberonLexical.Number;
             }
           case 28: break;
           case 11: 
@@ -835,11 +835,11 @@ public class OberonScanner {
             }
           case 29: break;
           case 12: 
-            { System.out.print(yytext());/* just skip what was found, do nothing */
+            { /* just skip what was found, do nothing */
             }
           case 30: break;
           case 13: 
-            { System.out.print(yytext()); return OberonLexical.Reserved_word;
+            { return OberonLexical.Reserved_word;
             }
           case 31: break;
           case 14: 
@@ -847,7 +847,7 @@ public class OberonScanner {
             }
           case 32: break;
           case 15: 
-            { System.out.print(yytext()); return OberonLexical.Assign_operator;
+            { return OberonLexical.Assign_operator;
             }
           case 33: break;
           case 16: 
@@ -859,7 +859,7 @@ public class OberonScanner {
             }
           case 35: break;
           case 18: 
-            { System.out.print(yytext()); return OberonLexical.Comment;
+            { return OberonLexical.Comment;
             }
           case 36: break;
           default:

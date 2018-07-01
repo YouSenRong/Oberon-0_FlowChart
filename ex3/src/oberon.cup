@@ -18,17 +18,27 @@ parser code
 	Procedure procedure;
 	/* 绘制函数流程图中while循环部分的WhileStatement对象的栈和IfStatement对象的栈，
 	因为while循环可能会有多层循环或者if语句条件判断的多层嵌套 */
-	Stack<WhileStatement> while_stack = new Stack();
-	Stack<IfStatement>  if_stack = new Stack();
+	Stack<WhileStatement> while_stack;
+	Stack<IfStatement>  if_stack;
 	/* a stack to store the current state of the statement 0:procedure, 1:while_statement, 2:if_statement */
-	Stack<Integer> int_stack = new Stack();
+	Stack<Integer> int_stack;
+	// 类型别名和基本类型(INTEGER, BOOLEAN)的HashMap
+	HashMap<String, String> newtype_type_HashMap;
+	// 变量和变量类型的HashMap
+	HashMap<String, String> identifier_type_HashMap;
 
+	
 
 :}
 
 init with 
 {:
 	main_Module = new Module("Oberon-0 FlowChart");
+	while_stack = new Stack();
+	if_stack = new Stack();
+	int_stack = new Stack();
+	newtype_type_HashMap = new HashMap();
+	identifier_type_HashMap = new HashMap();
 :}
 
 scan with {: return getScanner().next_token(); :};

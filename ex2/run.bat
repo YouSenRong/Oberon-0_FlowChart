@@ -1,3 +1,3 @@
 cd bin
-java Main ..\src\testcases\Oberon.obr
+java Main ..\src\testcases\cocktail_sort.obr
 pause

@@ -161,7 +161,7 @@ IllegalComment = "(*" ([^\*] | "*"+[^\)])* | ([^\(]|"("+[^\*])* "*)"
 <YYINITIAL> 
 {
 	
-	{ Comment }		{ System.out.print(yytext()); return OberonLexical.Comment; }
+	{ Comment }		{ return OberonLexical.Comment; }
 
 	{IllegalComment}	{ throw new IllegalCommentException(); }
 	
@@ -169,34 +169,34 @@ IllegalComment = "(*" ([^\*] | "*"+[^\)])* | ([^\(]|"("+[^\*])* "*)"
 	
 	{IllegalNumber}		{ throw new IllegalOctalException(); }	
 
-	{ Reserved_word } 	{ System.out.print(yytext()); return OberonLexical.Reserved_word; }
+	{ Reserved_word } 	{ return OberonLexical.Reserved_word; }
 
-	{ Logic_operator }	{ System.out.print(yytext()); return OberonLexical.Logic_operator; }
+	{ Logic_operator }	{ return OberonLexical.Logic_operator; }
 
-	{ Relational_operator }	{ System.out.print(yytext()); return OberonLexical.Relational_operator; }
+	{ Relational_operator }	{ return OberonLexical.Relational_operator; }
 	
-	{ Addictive_operator }	{ System.out.print(yytext()); return OberonLexical.Addictive_operator; }
+	{ Addictive_operator }	{ return OberonLexical.Addictive_operator; }
 
-	{ Multiplicative_operator }	{ System.out.print(yytext()); return OberonLexical.Multiplicative_operator; }
+	{ Multiplicative_operator }	{ return OberonLexical.Multiplicative_operator; }
 
-	{ Type_operator }	{ System.out.print(yytext()); return OberonLexical.Type_operator; }
+	{ Type_operator }	{ return OberonLexical.Type_operator; }
 
-	{ Selected_operator }	{ System.out.print(yytext()); return OberonLexical.Selected_operator; }
+	{ Selected_operator }	{ return OberonLexical.Selected_operator; }
 	
-	{ Assign_operator }	{ System.out.print(yytext()); return OberonLexical.Assign_operator; }
+	{ Assign_operator }	{ return OberonLexical.Assign_operator; }
 	
-	{ Seperated_operator }	{ System.out.print(yytext()); return OberonLexical.Seperated_operator; }
+	{ Seperated_operator }	{ return OberonLexical.Seperated_operator; }
 
-	{ Paratheses }		{ System.out.print(yytext()); return OberonLexical.Paratheses; }
+	{ Paratheses }		{ return OberonLexical.Paratheses; }
 
-	{ Identifier }		{ System.out.print(yytext()); return OberonLexical.Identifier; }
+	{ Identifier }		{ return OberonLexical.Identifier; }
 
-	{ Number }		{ System.out.print(yytext()); return OberonLexical.Number; }
+	{ Number }		{ return OberonLexical.Number; }
 
 	{ LineTerminator }	{ return OberonLexical.LineTerminator; }
 
 	/* Don't do anything if whitespace is found */
-    	{ WhiteSpace }	{ System.out.print(yytext());/* just skip what was found, do nothing */ }	
+    	{ WhiteSpace }	{ /* just skip what was found, do nothing */ }	
 
 }
 

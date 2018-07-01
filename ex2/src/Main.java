@@ -36,7 +36,7 @@ public static void main(String argv[])
 					{
 						if (return_id == 0)
 						{
-							System.out.println("There is not lexical error in" + argv[i]);
+							System.out.println("Congratulation!!! There is not lexical error in" + argv[i]);
 							break;
 						}
 					}
