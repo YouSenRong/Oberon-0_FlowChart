@@ -492,7 +492,8 @@ class CUP$Parser$actions {
 		int mright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String m = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-		System.out.println("Congratulation!!!");
+		System.out.println("Congratulation!!! There is no error in your program.");
+		System.out.println("Drawing Flowchart, please wait...");
 		Procedure proc = main_Module.add("test_1");
 		proc.add(new PrimitiveStatement("Yous_test_1"));
 		main_Module.show();
@@ -1317,7 +1318,6 @@ class CUP$Parser$actions {
 		int eright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 	
-				procedure.add(new PrimitiveStatement("WHILE Statement"));
 				WhileStatement wstmt = new WhileStatement(e);
 				if(!int_stack.empty())
 				{
@@ -1357,7 +1357,6 @@ class CUP$Parser$actions {
 		
 				int_stack.pop();
 				while_stack.pop();
-				procedure.add(new PrimitiveStatement("WHILE Statement END"));
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("while_statement",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1409,7 +1408,6 @@ class CUP$Parser$actions {
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-6)).value;
 		
 				int_stack.pop();
-				procedure.add(new PrimitiveStatement("IF Statement"));
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("if_statement",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-7)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1427,25 +1425,7 @@ class CUP$Parser$actions {
 		String e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 
 				IfStatement ifstmt = new IfStatement(e);
-				if(!int_stack.empty())
-				{
-					if(int_stack.peek() == 0)
-					{
-						procedure.add(ifstmt);
-					}
-					else if(int_stack.peek() == 1 )
-					{
-						while_stack.peek().getLoopBody().add(ifstmt);
-					}
-					else if(int_stack.peek() == 2 )
-					{	
-						if_stack.peek().getTrueBody().add(ifstmt);
-					}
-					else
-					{	
-						if_stack.peek().getFalseBody().add(ifstmt);
-					}
-				}
+				if_stack.peek().getFalseBody().add(ifstmt);
 				int_stack.push(new Integer(2));
 				if_stack.push(ifstmt);
 			

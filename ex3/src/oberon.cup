@@ -116,7 +116,8 @@ precedence left 	LPARENTHESES;
 
 program ::= module:m
 	{:
-		System.out.println("Congratulation!!!");
+		System.out.println("Congratulation!!! There is no error in your program.");
+		System.out.println("Drawing Flowchart, please wait...");
 		Procedure proc = main_Module.add("test_1");
 		proc.add(new PrimitiveStatement("Yous_test_1"));
 		main_Module.show();
@@ -404,7 +405,6 @@ statement ::=		assignment: a
 
 while_statement ::=	WHILE expression: e DO
 			{:	
-				procedure.add(new PrimitiveStatement("WHILE Statement"));
 				WhileStatement wstmt = new WhileStatement(e);
 				if(!int_stack.empty())
 				{
@@ -433,7 +433,6 @@ while_statement ::=	WHILE expression: e DO
 			{:
 				int_stack.pop();
 				while_stack.pop();
-				procedure.add(new PrimitiveStatement("WHILE Statement END"));
 			:};
 
 if_statement ::=	IF expression: e THEN 
@@ -467,32 +466,13 @@ if_statement ::=	IF expression: e THEN
 			END
 			{:
 				int_stack.pop();
-				procedure.add(new PrimitiveStatement("IF Statement"));
 			:};
 
 elsif_statement ::=	elsif_statement
 			ELSIF:elsif expression:e THEN
 			{:
 				IfStatement ifstmt = new IfStatement(e);
-				if(!int_stack.empty())
-				{
-					if(int_stack.peek() == 0)
-					{
-						procedure.add(ifstmt);
-					}
-					else if(int_stack.peek() == 1 )
-					{
-						while_stack.peek().getLoopBody().add(ifstmt);
-					}
-					else if(int_stack.peek() == 2 )
-					{	
-						if_stack.peek().getTrueBody().add(ifstmt);
-					}
-					else
-					{	
-						if_stack.peek().getFalseBody().add(ifstmt);
-					}
-				}
+				if_stack.peek().getFalseBody().add(ifstmt);
 				int_stack.push(new Integer(2));
 				if_stack.push(ifstmt);
 			:}
