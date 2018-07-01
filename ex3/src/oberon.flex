@@ -151,65 +151,65 @@ IllegalComment = "(*" ([^\*] | "*"+[^\)])+ | ([^\(]|"("+[^\*])+"*)"
 <YYINITIAL> 
 {
 	/* reserved word */
-	"MODULE"		{ return symbol(Symbol.MODULE); }
-	"PROCEDURE"		{ return symbol(Symbol.PROCEDURE); }
-	"CONST"			{ return symbol(Symbol.CONST); }
-	"TYPE"			{ return symbol(Symbol.TYPE); }
-	"VAR"			{ return symbol(Symbol.VAR); }
-	"RECORD"		{ return symbol(Symbol.RECORD); }
-	"ARRAY"			{ return symbol(Symbol.ARRAY); }
-	"OF"			{ return symbol(Symbol.OF); }
-	"WHILE"			{ return symbol(Symbol.WHILE); }
-	"DO"			{ return symbol(Symbol.DO); }
-	"IF"			{ return symbol(Symbol.IF); }
-	"THEN"			{ return symbol(Symbol.THEN); }
-	"ELSIF"			{ return symbol(Symbol.ELSIF); }
-	"ELSE"			{ return symbol(Symbol.ELSE); }
-	"BEGIN"			{ return symbol(Symbol.BEGIN); }
-	"END"			{ return symbol(Symbol.END); }
-	"INTEGER"		{ return symbol(Symbol.INTEGER); }
-	"BOOLEAN"		{ return symbol(Symbol.BOOLEAN); }
+	"MODULE"		{ return symbol(Symbol.MODULE, yytext()); }
+	"PROCEDURE"		{ return symbol(Symbol.PROCEDURE, yytext()); }
+	"CONST"			{ return symbol(Symbol.CONST, yytext()); }
+	"TYPE"			{ return symbol(Symbol.TYPE, yytext()); }
+	"VAR"			{ return symbol(Symbol.VAR, yytext()); }
+	"RECORD"		{ return symbol(Symbol.RECORD, yytext()); }
+	"ARRAY"			{ return symbol(Symbol.ARRAY, yytext()); }
+	"OF"			{ return symbol(Symbol.OF, yytext()); }
+	"WHILE"			{ return symbol(Symbol.WHILE, yytext()); }
+	"DO"			{ return symbol(Symbol.DO, yytext()); }
+	"IF"			{ return symbol(Symbol.IF, yytext()); }
+	"THEN"			{ return symbol(Symbol.THEN, yytext()); }
+	"ELSIF"			{ return symbol(Symbol.ELSIF, yytext()); }
+	"ELSE"			{ return symbol(Symbol.ELSE, yytext()); }
+	"BEGIN"			{ return symbol(Symbol.BEGIN, yytext()); }
+	"END"			{ return symbol(Symbol.END, yytext()); }
+	"INTEGER"		{ return symbol(Symbol.INTEGER, yytext()); }
+	"BOOLEAN"		{ return symbol(Symbol.BOOLEAN, yytext()); }
 
 	/* logic opetator */
-	"OR"			{ return symbol(Symbol.OR); }
-	"&"			{ return symbol(Symbol.AND); }
-	"~"			{ return symbol(Symbol.NOT); }
+	"OR"			{ return symbol(Symbol.OR, yytext()); }
+	"&"			{ return symbol(Symbol.AND, yytext()); }
+	"~"			{ return symbol(Symbol.NOT, yytext()); }
 	
 	/* relation operator */
-	"="			{ return symbol(Symbol.EQUAL); }
-	"#"			{ return symbol(Symbol.UNEQUAL); }
-	"<"			{ return symbol(Symbol.LESS); }
-	"<="			{ return symbol(Symbol.LESS_EQUAL); }
-	">"			{ return symbol(Symbol.GREAT); }
-	">="			{ return symbol(Symbol.GREAT_EQUAL); }
+	"="			{ return symbol(Symbol.EQUAL, yytext()); }
+	"#"			{ return symbol(Symbol.UNEQUAL, yytext()); }
+	"<"			{ return symbol(Symbol.LESS, yytext()); }
+	"<="			{ return symbol(Symbol.LESS_EQUAL, yytext()); }
+	">"			{ return symbol(Symbol.GREAT, yytext()); }
+	">="			{ return symbol(Symbol.GREAT_EQUAL, yytext()); }
 	
 	/* addictive operator */
-	"+"			{ return symbol(Symbol.PLUS); }
-	"-"			{ return symbol(Symbol.MINUS); }
+	"+"			{ return symbol(Symbol.PLUS, yytext()); }
+	"-"			{ return symbol(Symbol.MINUS, yytext()); }
 	
 	/* multiplicative operator */
-	"*"			{ return symbol(Symbol.TIMES); }
-	"DIV"			{ return symbol(Symbol.DIVIDE); }
-	"MOD"			{ return symbol(Symbol.MOD); }
+	"*"			{ return symbol(Symbol.TIMES, yytext()); }
+	"DIV"			{ return symbol(Symbol.DIVIDE, yytext()); }
+	"MOD"			{ return symbol(Symbol.MOD, yytext()); }
 	
 	/* type operator */
-	":"			{ return symbol(Symbol.COLON); }
+	":"			{ return symbol(Symbol.COLON, yytext()); }
 	
 	/* selected operator */
-	"."			{ return symbol(Symbol.DOT); }
-	"["			{ return symbol(Symbol.LBRACKET); }
-	"]"			{ return symbol(Symbol.RBRACKET); }
+	"."			{ return symbol(Symbol.DOT, yytext()); }
+	"["			{ return symbol(Symbol.LBRACKET, yytext()); }
+	"]"			{ return symbol(Symbol.RBRACKET, yytext()); }
 	
 	/* assign operator */
-	":="			{ return symbol(Symbol.ASSIGN); }
+	":="			{ return symbol(Symbol.ASSIGN, yytext()); }
 	
 	/* seperated operator */
-	","			{ return symbol(Symbol.COMMA); }
-	";"			{ return symbol(Symbol.SEMICOLON); }
+	","			{ return symbol(Symbol.COMMA, yytext()); }
+	";"			{ return symbol(Symbol.SEMICOLON, yytext()); }
 	
 	/* paratheses */
-	"("			{ return symbol(Symbol.LPARENTHESES); }
-	")"			{ return symbol(Symbol.RPARENTHESES); }
+	"("			{ return symbol(Symbol.LPARENTHESES, yytext()); }
+	")"			{ return symbol(Symbol.RPARENTHESES, yytext()); }
 
 	/* identifier */
 	{Identifier}		{ return symbol(Symbol.IDENTIFIER, yytext()); }

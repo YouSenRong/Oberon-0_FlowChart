@@ -119,8 +119,7 @@ decimal = [1-9]+[0-9]*
 octal = 0[1-7]?[0-7]*
 
 /* This is comment */
-/*Comment = "(*" [^*] ~"*)" | "(*" "*"+ ")"*/
-Comment = "(*"~"*)"
+Comment = "(*" [^*] ~"*)" | "(*" "*"+ ")"
 
 /* A line terminator is a \r (carriage return), \n (line feed), or 
    \r\n. */

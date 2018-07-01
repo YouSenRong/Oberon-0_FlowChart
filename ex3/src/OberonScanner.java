@@ -834,71 +834,71 @@ public class OberonScanner implements java_cup.runtime.Scanner {
             }
           case 51: break;
           case 3: 
-            { return symbol(Symbol.AND);
+            { return symbol(Symbol.AND, yytext());
             }
           case 52: break;
           case 4: 
-            { return symbol(Symbol.NOT);
+            { return symbol(Symbol.NOT, yytext());
             }
           case 53: break;
           case 5: 
-            { return symbol(Symbol.EQUAL);
+            { return symbol(Symbol.EQUAL, yytext());
             }
           case 54: break;
           case 6: 
-            { return symbol(Symbol.UNEQUAL);
+            { return symbol(Symbol.UNEQUAL, yytext());
             }
           case 55: break;
           case 7: 
-            { return symbol(Symbol.LESS);
+            { return symbol(Symbol.LESS, yytext());
             }
           case 56: break;
           case 8: 
-            { return symbol(Symbol.GREAT);
+            { return symbol(Symbol.GREAT, yytext());
             }
           case 57: break;
           case 9: 
-            { return symbol(Symbol.PLUS);
+            { return symbol(Symbol.PLUS, yytext());
             }
           case 58: break;
           case 10: 
-            { return symbol(Symbol.MINUS);
+            { return symbol(Symbol.MINUS, yytext());
             }
           case 59: break;
           case 11: 
-            { return symbol(Symbol.TIMES);
+            { return symbol(Symbol.TIMES, yytext());
             }
           case 60: break;
           case 12: 
-            { return symbol(Symbol.COLON);
+            { return symbol(Symbol.COLON, yytext());
             }
           case 61: break;
           case 13: 
-            { return symbol(Symbol.DOT);
+            { return symbol(Symbol.DOT, yytext());
             }
           case 62: break;
           case 14: 
-            { return symbol(Symbol.LBRACKET);
+            { return symbol(Symbol.LBRACKET, yytext());
             }
           case 63: break;
           case 15: 
-            { return symbol(Symbol.RBRACKET);
+            { return symbol(Symbol.RBRACKET, yytext());
             }
           case 64: break;
           case 16: 
-            { return symbol(Symbol.COMMA);
+            { return symbol(Symbol.COMMA, yytext());
             }
           case 65: break;
           case 17: 
-            { return symbol(Symbol.SEMICOLON);
+            { return symbol(Symbol.SEMICOLON, yytext());
             }
           case 66: break;
           case 18: 
-            { return symbol(Symbol.LPARENTHESES);
+            { return symbol(Symbol.LPARENTHESES, yytext());
             }
           case 67: break;
           case 19: 
-            { return symbol(Symbol.RPARENTHESES);
+            { return symbol(Symbol.RPARENTHESES, yytext());
             }
           case 68: break;
           case 20: 
@@ -910,31 +910,31 @@ public class OberonScanner implements java_cup.runtime.Scanner {
             }
           case 70: break;
           case 22: 
-            { return symbol(Symbol.OR);
+            { return symbol(Symbol.OR, yytext());
             }
           case 71: break;
           case 23: 
-            { return symbol(Symbol.OF);
+            { return symbol(Symbol.OF, yytext());
             }
           case 72: break;
           case 24: 
-            { return symbol(Symbol.DO);
+            { return symbol(Symbol.DO, yytext());
             }
           case 73: break;
           case 25: 
-            { return symbol(Symbol.IF);
+            { return symbol(Symbol.IF, yytext());
             }
           case 74: break;
           case 26: 
-            { return symbol(Symbol.LESS_EQUAL);
+            { return symbol(Symbol.LESS_EQUAL, yytext());
             }
           case 75: break;
           case 27: 
-            { return symbol(Symbol.GREAT_EQUAL);
+            { return symbol(Symbol.GREAT_EQUAL, yytext());
             }
           case 76: break;
           case 28: 
-            { return symbol(Symbol.ASSIGN);
+            { return symbol(Symbol.ASSIGN, yytext());
             }
           case 77: break;
           case 29: 
@@ -950,31 +950,31 @@ public class OberonScanner implements java_cup.runtime.Scanner {
             }
           case 80: break;
           case 32: 
-            { return symbol(Symbol.MOD);
+            { return symbol(Symbol.MOD, yytext());
             }
           case 81: break;
           case 33: 
-            { return symbol(Symbol.DIVIDE);
+            { return symbol(Symbol.DIVIDE, yytext());
             }
           case 82: break;
           case 34: 
-            { return symbol(Symbol.END);
+            { return symbol(Symbol.END, yytext());
             }
           case 83: break;
           case 35: 
-            { return symbol(Symbol.VAR);
+            { return symbol(Symbol.VAR, yytext());
             }
           case 84: break;
           case 36: 
-            { return symbol(Symbol.ELSE);
+            { return symbol(Symbol.ELSE, yytext());
             }
           case 85: break;
           case 37: 
-            { return symbol(Symbol.TYPE);
+            { return symbol(Symbol.TYPE, yytext());
             }
           case 86: break;
           case 38: 
-            { return symbol(Symbol.THEN);
+            { return symbol(Symbol.THEN, yytext());
             }
           case 87: break;
           case 39: 
@@ -982,43 +982,43 @@ public class OberonScanner implements java_cup.runtime.Scanner {
             }
           case 88: break;
           case 40: 
-            { return symbol(Symbol.ELSIF);
+            { return symbol(Symbol.ELSIF, yytext());
             }
           case 89: break;
           case 41: 
-            { return symbol(Symbol.CONST);
+            { return symbol(Symbol.CONST, yytext());
             }
           case 90: break;
           case 42: 
-            { return symbol(Symbol.ARRAY);
+            { return symbol(Symbol.ARRAY, yytext());
             }
           case 91: break;
           case 43: 
-            { return symbol(Symbol.WHILE);
+            { return symbol(Symbol.WHILE, yytext());
             }
           case 92: break;
           case 44: 
-            { return symbol(Symbol.BEGIN);
+            { return symbol(Symbol.BEGIN, yytext());
             }
           case 93: break;
           case 45: 
-            { return symbol(Symbol.MODULE);
+            { return symbol(Symbol.MODULE, yytext());
             }
           case 94: break;
           case 46: 
-            { return symbol(Symbol.RECORD);
+            { return symbol(Symbol.RECORD, yytext());
             }
           case 95: break;
           case 47: 
-            { return symbol(Symbol.INTEGER);
+            { return symbol(Symbol.INTEGER, yytext());
             }
           case 96: break;
           case 48: 
-            { return symbol(Symbol.BOOLEAN);
+            { return symbol(Symbol.BOOLEAN, yytext());
             }
           case 97: break;
           case 49: 
-            { return symbol(Symbol.PROCEDURE);
+            { return symbol(Symbol.PROCEDURE, yytext());
             }
           case 98: break;
           default:

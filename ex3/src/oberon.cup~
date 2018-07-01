@@ -12,22 +12,22 @@ import callgraph.*;
 import flowchart.*;
 parser code
 {:
-	public HashMap<String, Integer> Identifier_Value_HashMap = new HashMap();
-	public HashMap<String, Integer> New_type_name = new HashMap();
-	public HashMap<String, Integer> Indetifier_Type_HashMap = new HashMap();
-	public HashMap<String, ArrayList<Integer>> Array_HashMap = new HashMap();
 
-	public CallGraph graph;
+	//public CallGraph graph;
 	
 	Module main_Module;
 	Procedure procedure;
+	Stack<WhileStatement> while_stack = new Stack();
+	Stack<IfStatement>  if_stack = new Stack();
+	/* a stack to store the current state of the statement 0:procedure, 1:while_statement, 2:if_statement */
+	Stack<Integer> int_stack = new Stack();
 
 
 :}
 
 init with 
 {:
-	graph = new CallGraph();
+	//graph = new CallGraph();
 	main_Module = new Module("Oberon-0 FlowChart");
 :}
 
@@ -87,7 +87,7 @@ terminal String	NUMBER;
 
 non terminal String	program, module, module_begin;
 non terminal String	statement_sequence, statement, assignment, procedure_call, if_statement, elsif_statement, else_statement, while_statement;
-non terminal String	declarations, const_declaration, const_list, type_declaration, type_list, var_declaration, var_list;
+non terminal String	declarations, const_declaration, const_list, type_declaration, type_list, var_declaration, var_list, var_epsilon;
 non terminal String	procedure_declaration, procedure_heading, procedure_body, procedure_begin;
 
 non terminal String	formal_parameters, fp_section_list, fp_section, actual_parameters, expression_list;
@@ -99,8 +99,6 @@ non terminal String	type, array_type, record_type;
 non terminal String	field_lists, field_list, identifier_list;
 
 non terminal String	selector;
-
-non terminal String	var_epsilon;
 
 /* -------------Precedence and Associatively of Terminals Section----------- */
 precedence right	ASSIGN;
@@ -143,17 +141,34 @@ module_begin ::=	BEGIN statement_sequence
 
 
 declarations ::=	const_declaration: c_d
-			type_declaration: c_t
+			type_declaration: t_d
 			var_declaration: v_d
 			procedure_declaration: p_d
 			{:
-				procedure.add(new PrimitiveStatement(c_d + "\n" + c_t + "\n" + v_d + "\n" + p_d +"\n"));
-				//RESULT = c_d + c_t + v_d + p_d;
+				String str_declarations = "";
+				if(c_d != null && c_d.length() > 0)
+				{
+					str_declarations = str_declarations + c_d + "<br>";
+				}
+				if(t_d != null && t_d.length() > 0)
+				{
+					str_declarations = str_declarations + t_d + "<br>";
+				}
+				if(v_d != null && v_d.length() > 0)
+				{
+					str_declarations = str_declarations + v_d + "<br>";
+				}
+				if(p_d != null && p_d.length() > 0)
+				{
+					str_declarations = str_declarations + p_d + "<br>";
+				}
+				// add the declarations to the flowchart
+				procedure.add(new PrimitiveStatement(str_declarations));
 			:};
 
-const_declaration ::=	CONST const_list: c_l
+const_declaration ::=	CONST:c const_list: c_l
 			{:
-				RESULT = "const" + c_l;
+				RESULT = c + " " + c_l;
 			:} 
 			| /*epsilon*/
 			{:
@@ -162,7 +177,7 @@ const_declaration ::=	CONST const_list: c_l
 
 const_list ::=		const_list: c_l IDENTIFIER:identifier EQUAL: equal expression: e SEMICOLON: semicolon
 			{:
-				RESULT = c_l + identifier + equal + e + semicolon;
+				RESULT = c_l + " " + identifier + " " + equal + " " + e + " " + semicolon;
 			:}
 			| /*empty*/
 			{:
@@ -171,7 +186,7 @@ const_list ::=		const_list: c_l IDENTIFIER:identifier EQUAL: equal expression: e
 
 type_declaration ::=	TYPE:t type_list : t_l
 			{:
-				RESULT = t + t_l;
+				RESULT = t + " " + t_l;
 			:}
 			| /*eplison*/
 			{:
@@ -180,7 +195,7 @@ type_declaration ::=	TYPE:t type_list : t_l
 
 type_list ::=		type_list:t_l IDENTIFIER:identifier EQUAL: equal type: t SEMICOLON: semicolon
 			{:
-				RESULT = t_l + identifier + equal + t + semicolon;
+				RESULT = t_l + " " + identifier + " " + equal + " " + t + " " + semicolon;
 			:}
 			| /*eplison*/
 			{:
@@ -189,16 +204,16 @@ type_list ::=		type_list:t_l IDENTIFIER:identifier EQUAL: equal type: t SEMICOLO
 
 var_declaration ::=	VAR:var var_list: v_l
 			{:
-				RESULT = var + v_l;
+				RESULT = var + " " + v_l;
 			:}
 			| /*empty*/
 			{:
 				RESULT = "";
 			:};
 
-var_list ::=		var_list: v_l identifier_list: id_list COLON type: t SEMICOLON: semicolon
+var_list ::=		var_list: v_l identifier_list: id_list COLON: colon type: t SEMICOLON: semicolon
 			{:
-				RESULT = v_l + id_list + t + semicolon;
+				RESULT = v_l + " " + id_list + " " + colon + " " + t + " " + semicolon;
 			:}
 			| /*epsilon*/
 			{:
@@ -207,7 +222,7 @@ var_list ::=		var_list: v_l identifier_list: id_list COLON type: t SEMICOLON: se
 
 identifier_list ::=	identifier_list: id_list COMMA: comma IDENTIFIER: identifier
 			{:
-				RESULT = id_list + comma + identifier;
+				RESULT = id_list + " " + comma + " " + identifier;
 			:}
 			| IDENTIFIER: identifier
 			{:
@@ -223,6 +238,7 @@ procedure_declaration ::=	procedure_declaration procedure_heading SEMICOLON
 
 procedure_heading ::=	PROCEDURE IDENTIFIER: identifier formal_parameters: fp
 			{:
+				int_stack.push(new Integer(0));
 				procedure = main_Module.add(identifier);
 			:};
 
@@ -274,13 +290,13 @@ type ::=		IDENTIFIER: identifier
 			{:
 				RESULT = b;
 			:}
-			| array_type: t
+			| array_type: a_t
 			{:
-				RESULT = t;
+				RESULT = a_t;
 			:}
-			| record_type: t
+			| record_type: r_t
 			{:
-				RESULT = t;
+				RESULT = r_t;
 			:};
 array_type ::=		ARRAY: array expression OF type
 			{:
@@ -314,24 +330,70 @@ field_list ::=		identifier_list: id_list COLON: colon type: t
 
 procedure_body ::=	declarations procedure_begin END IDENTIFIER: identifier
 			{:
+				int_stack.pop();
 			:};
 
-procedure_begin ::=	BEGIN statement_sequence | /*empty*/;
+procedure_begin ::=	BEGIN statement_sequence 
+			| /*empty*/
+			{:
+				RESULT = "";
+			:};
 
 				
 statement_sequence ::=	statement_sequence: s_s SEMICOLON: semicolon statement: s
 			{:
 				RESULT = s_s + semicolon + s;
 			:}
-			| statement;
+			| statement: s
+			{:
+				RESULT = s;
+			:};
 
 statement ::=		assignment: a
 			{:
-				procedure.add(new PrimitiveStatement(a));
+				if(!int_stack.empty())
+				{
+					if(int_stack.peek() == 0)
+					{
+						procedure.add(new PrimitiveStatement(a));
+					}
+					else if(int_stack.peek() == 1 )
+					{
+						while_stack.peek().getLoopBody().add(new PrimitiveStatement(a));
+					}
+					else if(int_stack.peek() == 2 )
+					{	
+						if_stack.peek().getTrueBody().add(new PrimitiveStatement(a));
+					}
+					else
+					{	
+						if_stack.peek().getFalseBody().add(new PrimitiveStatement(a));
+					}
+				}
+
+				
 			:}
 			| procedure_call: p_c
 			{:
-				procedure.add(new PrimitiveStatement(p_c));
+				if(!int_stack.empty())
+				{
+					if(int_stack.peek() == 0)
+					{
+						procedure.add(new PrimitiveStatement(p_c));
+					}
+					else if(int_stack.peek() == 1 )
+					{
+						while_stack.peek().getLoopBody().add(new PrimitiveStatement(p_c));
+					}
+					else if(int_stack.peek() == 2 )
+					{	
+						if_stack.peek().getTrueBody().add(new PrimitiveStatement(p_c));
+					}
+					else
+					{	
+						if_stack.peek().getFalseBody().add(new PrimitiveStatement(p_c));
+					}
+				}
 			:}
 			| if_statement
 			| while_statement
@@ -341,30 +403,117 @@ statement ::=		assignment: a
 			:};
 
 while_statement ::=	WHILE expression: e DO
+			{:	
+				procedure.add(new PrimitiveStatement("WHILE Statement"));
+				WhileStatement wstmt = new WhileStatement(e);
+				if(!int_stack.empty())
+				{
+					if(int_stack.peek() == 0)
+					{
+						procedure.add(wstmt);
+					}
+					else if(int_stack.peek() == 1 )
+					{
+						while_stack.peek().getLoopBody().add(wstmt);
+					}
+					else if(int_stack.peek() == 2 )
+					{	
+						if_stack.peek().getTrueBody().add(wstmt);
+					}
+					else
+					{	
+						if_stack.peek().getFalseBody().add(wstmt);
+					}
+				}
+				int_stack.push(new Integer(1));
+				while_stack.push(wstmt);
+			:}
 				statement_sequence
 			END
 			{:
-					procedure.add(new PrimitiveStatement("WHILE Statement"));
+				int_stack.pop();
+				while_stack.pop();
+				procedure.add(new PrimitiveStatement("WHILE Statement END"));
 			:};
 
 if_statement ::=	IF expression: e THEN 
+			{:
+				IfStatement ifstmt = new IfStatement(e);
+				if(!int_stack.empty())
+				{
+					if(int_stack.peek() == 0)
+					{
+						procedure.add(ifstmt);
+					}
+					else if(int_stack.peek() == 1 )
+					{
+						while_stack.peek().getLoopBody().add(ifstmt);
+					}
+					else if(int_stack.peek() == 2 )
+					{	
+						if_stack.peek().getTrueBody().add(ifstmt);
+					}
+					else
+					{	
+						if_stack.peek().getFalseBody().add(ifstmt);
+					}
+				}
+				int_stack.push(new Integer(2));
+				if_stack.push(ifstmt);
+			:}
 				statement_sequence
 			elsif_statement
 			else_statement
 			END
 			{:
+				int_stack.pop();
 				procedure.add(new PrimitiveStatement("IF Statement"));
 			:};
 
 elsif_statement ::=	elsif_statement
 			ELSIF:elsif expression:e THEN
+			{:
+				IfStatement ifstmt = new IfStatement(e);
+				if(!int_stack.empty())
+				{
+					if(int_stack.peek() == 0)
+					{
+						procedure.add(ifstmt);
+					}
+					else if(int_stack.peek() == 1 )
+					{
+						while_stack.peek().getLoopBody().add(ifstmt);
+					}
+					else if(int_stack.peek() == 2 )
+					{	
+						if_stack.peek().getTrueBody().add(ifstmt);
+					}
+					else
+					{	
+						if_stack.peek().getFalseBody.add(ifstmt);
+					}
+				}
+				int_stack.push(new Integer(2));
+				if_stack.push(ifstmt);
+			:}
 				statement_sequence
+			{:
+				if_stack.pop();
+				int_stack.pop();
+			:}
 			| /*epsilon*/
 			{:
 				RESULT = "";
 			:};
 
-else_statement ::=	ELSE:e statement_sequence: s_s
+else_statement ::=	ELSE:e 
+			{:
+				int_stack.push(new Integer(3));
+			:}
+				statement_sequence: s_s
+			{:
+				int_stack.pop();
+			:}
 			| /*epsilon*/
 			{:
 				RESULT = "";
@@ -477,7 +626,10 @@ signed_operator ::=	PLUS: plus
 				RESULT = minus ;
 				/*System.out.println(RESULT);*/
 			:}
-			| /*epsilon*/;
+			| /*epsilon*/
+			{:
+				RESULT = "";
+			:};
 
 simple_expression_operator ::=	PLUS: plus
 				{:
