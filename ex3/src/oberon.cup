@@ -119,8 +119,6 @@ program ::= module:m
 	{:
 		System.out.println("Congratulation!!! There is no error in your program.");
 		System.out.println("Drawing Flowchart, please wait...");
-		Procedure proc = main_Module.add("test_1");
-		proc.add(new PrimitiveStatement("Yous_test_1"));
 		main_Module.show();
 	:};
 
@@ -157,22 +155,25 @@ declarations ::=	const_declaration: c_d
 					String str_declarations = "";
 					if(c_d != null && c_d.length() > 0)
 					{
-						str_declarations = str_declarations + c_d + "<br>";
+						str_declarations = str_declarations + " " + c_d + "<br>";
 					}
 					if(t_d != null && t_d.length() > 0)
 					{
-						str_declarations = str_declarations + t_d + "<br>";
+						str_declarations = str_declarations + " " + t_d + "<br>";
 					}
 					if(v_d != null && v_d.length() > 0)
 					{
-						str_declarations = str_declarations + v_d + "<br>";
+						str_declarations = str_declarations + " " + v_d + "<br>";
 					}
 					if(p_d != null && p_d.length() > 0)
 					{
-						str_declarations = str_declarations + p_d + "<br>";
+						str_declarations = str_declarations + " " + p_d + "<br>";
 					}
 					// add the declarations to the flowchart
-					procedure.add(new PrimitiveStatement(str_declarations));
+					if(!str_declarations.equals(""))
+					{
+						procedure.add(new PrimitiveStatement(str_declarations));
+					}
 				}
 
 			:};
@@ -188,7 +189,7 @@ const_declaration ::=	CONST:c const_list: c_l
 
 const_list ::=		const_list: c_l IDENTIFIER:identifier EQUAL: equal expression: e SEMICOLON: semicolon
 			{:
-				RESULT = c_l + " " + identifier + " " + equal + " " + e + " " + semicolon;
+				RESULT = c_l + " " + identifier + " " + equal + " " + e + semicolon;
 			:}
 			| /*empty*/
 			{:
@@ -206,7 +207,7 @@ type_declaration ::=	TYPE:t type_list : t_l
 
 type_list ::=		type_list:t_l IDENTIFIER:identifier EQUAL: equal type: t SEMICOLON: semicolon
 			{:
-				RESULT = t_l + " " + identifier + " " + equal + " " + t + " " + semicolon;
+				RESULT = t_l + " " + identifier + " " + equal + " " + t + semicolon;
 			:}
 			| /*eplison*/
 			{:
@@ -224,7 +225,7 @@ var_declaration ::=	VAR:var var_list: v_l
 
 var_list ::=		var_list: v_l identifier_list: id_list COLON: colon type: t SEMICOLON: semicolon
 			{:
-				RESULT = v_l + " " + id_list + " " + colon + " " + t + " " + semicolon;
+				RESULT = v_l + " " + id_list + " " + colon + " " + t + semicolon;
 			:}
 			| /*epsilon*/
 			{:
@@ -233,7 +234,7 @@ var_list ::=		var_list: v_l identifier_list: id_list COLON: colon type: t SEMICO
 
 identifier_list ::=	identifier_list: id_list COMMA: comma IDENTIFIER: identifier
 			{:
-				RESULT = id_list + " " + comma + " " + identifier;
+				RESULT = id_list + comma + " " + identifier;
 			:}
 			| IDENTIFIER: identifier
 			{:
@@ -256,7 +257,7 @@ procedure_heading ::=	PROCEDURE IDENTIFIER: identifier formal_parameters: fp
 
 formal_parameters ::=	LPARENTHESES fp_section_list: fp_s_l RPARENTHESES
 			{:
-				RESULT = "(" + fp_s_l + ")";
+				RESULT = "(" + " " + fp_s_l + " " + ")";
 			:}
 			| LPARENTHESES RPARENTHESES
 			{:
@@ -269,7 +270,7 @@ formal_parameters ::=	LPARENTHESES fp_section_list: fp_s_l RPARENTHESES
 
 fp_section_list ::=	fp_section_list: fp_s_l SEMICOLON: semicolon fp_section: fp_s
 			{:
-				RESULT = fp_s_l + semicolon + fp_s;
+				RESULT = fp_s_l + semicolon + " " + fp_s;
 			:}
 			| fp_section: fp_s
 			{:
@@ -278,7 +279,7 @@ fp_section_list ::=	fp_section_list: fp_s_l SEMICOLON: semicolon fp_section: fp_
 
 fp_section ::=		var_epsilon: v_e identifier_list: id_list COLON: colon type: t
 			{:
-				RESULT = v_e + id_list + colon + t;
+				RESULT = v_e + " " + id_list + " " + colon + " " + t;
 			:};
 
 var_epsilon ::=		VAR:var
@@ -324,7 +325,7 @@ record_type ::=		RECORD: record
 
 field_lists ::=		field_lists: f_ls SEMICOLON: semicolon field_list: f_l
 			{:
-				RESULT = f_ls + semicolon + f_l;
+				RESULT = f_ls + semicolon + " " + f_l;
 			:}
 			| field_list: f_l
 			{:
@@ -333,7 +334,7 @@ field_lists ::=		field_lists: f_ls SEMICOLON: semicolon field_list: f_l
 
 field_list ::=		identifier_list: id_list COLON: colon type: t
 			{:
-				RESULT = id_list + colon + t;
+				RESULT = id_list + " " + colon + " " + t;
 			:}
 			| /*epsilon*/
 			{:
@@ -356,9 +357,9 @@ procedure_begin ::=	BEGIN statement_sequence
 			:};
 
 				
-statement_sequence ::=	statement_sequence: s_s SEMICOLON: semicolon statement: s
+statement_sequence ::=	statement_sequence: s_s SEMICOLON: semicolon statement: s 
 			{:
-				RESULT = s_s + semicolon + s;
+				RESULT = s_s + semicolon + " " + s;
 			:}
 			| statement: s
 			{:
@@ -563,7 +564,7 @@ procedure_call ::=	IDENTIFIER: identifier actual_parameters: a_p
 			
 actual_parameters ::=	LPARENTHESES:lp expression_list:ex_l RPARENTHESES: rp
 			{:
-				RESULT = lp + ex_l + rp;
+				RESULT = lp + " " + ex_l + " " + rp;
 			:}
 			| LPARENTHESES:lp RPARENTHESES:rp
 			{:
@@ -576,7 +577,7 @@ actual_parameters ::=	LPARENTHESES:lp expression_list:ex_l RPARENTHESES: rp
 
 expression_list ::=	expression_list: ex_l COMMA: comma expression: e
 			{:
-				RESULT = ex_l + comma + e;	
+				RESULT = ex_l + " " + comma + " " + e;	
 			:}
 			| expression: e
 			{:
@@ -585,12 +586,12 @@ expression_list ::=	expression_list: ex_l COMMA: comma expression: e
 
 assignment ::=		IDENTIFIER:identifier selector: s ASSIGN: assign expression: e
 			{:
-				RESULT = identifier + s + assign + e;
+				RESULT = identifier + s + " " + assign + " " + e;
 			:};
 
 expression ::=		simple_expression: s_e_1 expression_operator: e_o simple_expression: s_e_2
 			{:
-				RESULT = s_e_1  + e_o  + s_e_2 ;
+				RESULT = s_e_1  + " " + e_o  + " " + s_e_2 ;
 				/*System.out.println(RESULT);*/
 			:}
 			| simple_expression: s_e
@@ -619,7 +620,7 @@ expression_operator ::=	EQUAL: equal
 			:} 
 			| LESS: less
 			{:
-				RESULT = less ;
+				RESULT = "&lt" ;
 				/*System.out.println(RESULT);*/
 			:}
 			| LESS_EQUAL: less_equal
@@ -629,7 +630,7 @@ expression_operator ::=	EQUAL: equal
 			:}
 			| GREAT: great
 			{:
-				RESULT = great ;
+				RESULT = "&gt" ;
 				/*System.out.println(RESULT);*/
 			:}
 			| GREAT_EQUAL:great_less
@@ -640,12 +641,12 @@ expression_operator ::=	EQUAL: equal
 
 simple_expression ::=	simple_expression: s_e simple_expression_operator: s_e_o term: t
 			{:
-				RESULT = s_e  + s_e_o  + t ;
+				RESULT = s_e  + " " + s_e_o  + " " + t ;
 				/*System.out.println(RESULT);*/
 			:}
 			| signed_operator: s_o term: t
 			{:
-				RESULT = s_o  + t ;
+				RESULT = s_o + t ;
 			:}
 			| OR term
 			{:
@@ -687,7 +688,7 @@ simple_expression_operator ::=	PLUS: plus
 
 term ::=		term: t term_operator: t_o factor: f
 			{:
-				RESULT = t  + t_o  + f ;
+				RESULT = t  + " " + t_o  + " " + f ;
 				/*System.out.println(RESULT);*/
 			:}
 			| factor: f
