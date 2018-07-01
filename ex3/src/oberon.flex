@@ -212,10 +212,28 @@ IllegalComment = "(*" ([^\*] | "*"+[^\)])+ | ([^\(]|"("+[^\*])+"*)"
 	")"			{ return symbol(Symbol.RPARENTHESES, yytext()); }
 
 	/* identifier */
-	{Identifier}		{ return symbol(Symbol.IDENTIFIER, yytext()); }
+	{Identifier}		{ 
+					if(yylength() > 24)
+					{
+						throw new IllegalIntegerRangeException(yytext());
+					}
+					else
+					{
+						return symbol(Symbol.IDENTIFIER, yytext()); 
+					}
+				}
 
 	/* number */
-	{Number}		{ return symbol(Symbol.NUMBER, yytext()); }
+	{Number}		{ 
+					if(yylength() > 24)
+					{
+						throw new IllegalIntegerRangeException(yytext());
+					}
+					else
+					{
+						return symbol(Symbol.NUMBER, yytext()); 
+					}
+				}
 
 	/* Don't do anything if whitespace is found */
     	{ WhiteSpace }	{ /* just skip what was found, do nothing */ }

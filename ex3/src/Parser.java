@@ -434,7 +434,6 @@ public class Parser extends java_cup.runtime.lr_parser {
   public void user_init() throws java.lang.Exception
     {
 
-	//graph = new CallGraph();
 	main_Module = new Module("Oberon-0 FlowChart");
 
     }
@@ -529,7 +528,7 @@ class CUP$Parser$actions {
 		int identifier_2right = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
 		String identifier_2 = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		
-		
+			
 		
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("module",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-7)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -843,7 +842,18 @@ class CUP$Parser$actions {
           case 20: // procedure_declaration ::= procedure_declaration procedure_heading SEMICOLON procedure_body SEMICOLON 
             {
               String RESULT =null;
-
+		int head_nameleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).left;
+		int head_nameright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).right;
+		String head_name = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		int tail_nameleft = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).left;
+		int tail_nameright = ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).right;
+		String tail_name = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		
+					if(!head_name.equals(tail_name))
+					{
+						throw new ProcedureNameMismatchedException();
+					}
+				
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_declaration",19, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -873,6 +883,8 @@ class CUP$Parser$actions {
 				// 流程图的从这里开始，向int_stack中压入0，表示当前的流程图位置是函数
 				int_stack.push(new Integer(0));
 				procedure = main_Module.add(identifier);
+				// 返回头部函数名，以便检查函数名是否匹配
+				RESULT = identifier;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_heading",20, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1172,6 +1184,8 @@ class CUP$Parser$actions {
 				因此当一个函数的流程图绘制结束时，int_stack栈为空。
 				*/
 				int_stack.pop();
+				// 返回尾部函数名，以便检查函数名是否匹配
+				RESULT = identifier;
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("procedure_body",21, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1703,7 +1717,6 @@ class CUP$Parser$actions {
 		String s_e_2 = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = s_e_1  + " " + e_o  + " " + s_e_2 ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression",28, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1718,7 +1731,6 @@ class CUP$Parser$actions {
 		String s_e = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = s_e ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression",28, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1755,7 +1767,6 @@ class CUP$Parser$actions {
 		String equal = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = equal ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression_operator",32, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1770,7 +1781,6 @@ class CUP$Parser$actions {
 		String unequal = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = unequal ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression_operator",32, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1784,8 +1794,8 @@ class CUP$Parser$actions {
 		int lessright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String less = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
+				// "&lt"表示小于号<,直接些"<"在流程图中无法显示
 				RESULT = "&lt" ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression_operator",32, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1800,7 +1810,6 @@ class CUP$Parser$actions {
 		String less_equal = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = less_equal ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression_operator",32, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1815,7 +1824,6 @@ class CUP$Parser$actions {
 		String great = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = "&gt" ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression_operator",32, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1830,7 +1838,6 @@ class CUP$Parser$actions {
 		String great_less = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = great_less ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("expression_operator",32, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1851,7 +1858,6 @@ class CUP$Parser$actions {
 		String t = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = s_e  + " " + s_e_o  + " " + t ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("simple_expression",29, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1894,8 +1900,6 @@ class CUP$Parser$actions {
 		String plus = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = plus ;
-				/*System.out.println(RESULT);*/
-				
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("signed_operator",34, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1910,7 +1914,6 @@ class CUP$Parser$actions {
 		String minus = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = minus ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("signed_operator",34, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1936,8 +1939,6 @@ class CUP$Parser$actions {
 		String plus = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 					RESULT = plus ;
-					/*System.out.println(RESULT);*/
-				
 				
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("simple_expression_operator",33, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1952,7 +1953,6 @@ class CUP$Parser$actions {
 		String minus = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 					RESULT = minus ;
-					/*System.out.println(RESULT);*/
 				
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("simple_expression_operator",33, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1966,8 +1966,7 @@ class CUP$Parser$actions {
 		int orright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		String or = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
-					/*RESULT = or ;*/
-					/*System.out.println(RESULT);*/
+					RESULT = or ;
 				
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("simple_expression_operator",33, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -1988,7 +1987,6 @@ class CUP$Parser$actions {
 		String f = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = t  + " " + t_o  + " " + f ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("term",30, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2040,7 +2038,6 @@ class CUP$Parser$actions {
 		String times = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = times ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("term_operator",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2055,7 +2052,6 @@ class CUP$Parser$actions {
 		String divides = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = divides ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("term_operator",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2070,7 +2066,6 @@ class CUP$Parser$actions {
 		String mod = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = mod ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("term_operator",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2085,7 +2080,6 @@ class CUP$Parser$actions {
 		String and = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = and ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("term_operator",35, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2103,7 +2097,6 @@ class CUP$Parser$actions {
 		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = identifier  + s ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("factor",31, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2139,7 +2132,6 @@ class CUP$Parser$actions {
 		String rparen = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = lparen  + e  + rparen ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("factor",31, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2157,7 +2149,6 @@ class CUP$Parser$actions {
 		String f = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = not  + f ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("factor",31, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2178,7 +2169,6 @@ class CUP$Parser$actions {
 		String identifier = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = s  + dot  + identifier ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("selector",42, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2202,7 +2192,6 @@ class CUP$Parser$actions {
 		String rbracket = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		
 				RESULT = s + lbracket + e + rbracket ;
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("selector",42, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -2214,7 +2203,6 @@ class CUP$Parser$actions {
               String RESULT =null;
 		
 				RESULT = "";
-				/*System.out.println(RESULT);*/
 			
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("selector",42, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

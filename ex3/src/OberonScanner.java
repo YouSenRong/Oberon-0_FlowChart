@@ -830,7 +830,14 @@ public class OberonScanner implements java_cup.runtime.Scanner {
             }
           case 50: break;
           case 2: 
-            { return symbol(Symbol.IDENTIFIER, yytext());
+            { if(yylength() > 24)
+					{
+						throw new IllegalIntegerRangeException(yytext());
+					}
+					else
+					{
+						return symbol(Symbol.IDENTIFIER, yytext()); 
+					}
             }
           case 51: break;
           case 3: 
@@ -902,7 +909,14 @@ public class OberonScanner implements java_cup.runtime.Scanner {
             }
           case 68: break;
           case 20: 
-            { return symbol(Symbol.NUMBER, yytext());
+            { if(yylength() > 24)
+					{
+						throw new IllegalIntegerRangeException(yytext());
+					}
+					else
+					{
+						return symbol(Symbol.NUMBER, yytext()); 
+					}
             }
           case 69: break;
           case 21: 

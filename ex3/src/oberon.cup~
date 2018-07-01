@@ -28,7 +28,6 @@ parser code
 
 init with 
 {:
-	//graph = new CallGraph();
 	main_Module = new Module("Oberon-0 FlowChart");
 :}
 
@@ -127,7 +126,7 @@ module ::=	MODULE:m IDENTIFIER: identifier_1 SEMICOLON
 		module_begin
 		END IDENTIFIER: identifier_2 DOT
 		{:
-		
+			
 		:};
 
 module_begin ::=	BEGIN statement_sequence
@@ -241,10 +240,14 @@ identifier_list ::=	identifier_list: id_list COMMA: comma IDENTIFIER: identifier
 				RESULT = identifier;
 			:};
 
-procedure_declaration ::=	procedure_declaration procedure_heading SEMICOLON 
-				procedure_body SEMICOLON
+procedure_declaration ::=	procedure_declaration procedure_heading: head_name SEMICOLON 
+				procedure_body: tail_name SEMICOLON
 				| /*epsilon*/
 				{:
+					if(!head_name.equals(tail_name))
+					{
+						throw new ProcedureNameMismatchedException();
+					}
 					RESULT = "";
 				:};
 
@@ -253,6 +256,8 @@ procedure_heading ::=	PROCEDURE IDENTIFIER: identifier formal_parameters: fp
 				// 流程图的从这里开始，向int_stack中压入0，表示当前的流程图位置是函数
 				int_stack.push(new Integer(0));
 				procedure = main_Module.add(identifier);
+				// 返回头部函数名，以便检查函数名是否匹配
+				RESULT = identifier;
 			:};
 
 formal_parameters ::=	LPARENTHESES fp_section_list: fp_s_l RPARENTHESES
@@ -348,6 +353,8 @@ procedure_body ::=	declarations procedure_begin END IDENTIFIER: identifier
 				因此当一个函数的流程图绘制结束时，int_stack栈为空。
 				*/
 				int_stack.pop();
+				// 返回尾部函数名，以便检查函数名是否匹配
+				RESULT = identifier;
 			:};
 
 procedure_begin ::=	BEGIN statement_sequence 
@@ -357,9 +364,9 @@ procedure_begin ::=	BEGIN statement_sequence
 			:};
 
 				
-statement_sequence ::=	statement_sequence: s_s SEMICOLON: semicolon_1 statement: s SEMICOLON: semicolon_2
+statement_sequence ::=	statement_sequence: s_s SEMICOLON: semicolon statement: s 
 			{:
-				RESULT = s_s + semicolon_1 + " " + s + semicolon_2;
+				RESULT = s_s + semicolon + " " + s;
 			:}
 			| statement: s
 			{:
@@ -592,12 +599,10 @@ assignment ::=		IDENTIFIER:identifier selector: s ASSIGN: assign expression: e
 expression ::=		simple_expression: s_e_1 expression_operator: e_o simple_expression: s_e_2
 			{:
 				RESULT = s_e_1  + " " + e_o  + " " + s_e_2 ;
-				/*System.out.println(RESULT);*/
 			:}
 			| simple_expression: s_e
 			{:
 				RESULT = s_e ;
-				/*System.out.println(RESULT);*/
 			:}
 			| expression_operator simple_expression
 			{:
@@ -611,38 +616,32 @@ expression ::=		simple_expression: s_e_1 expression_operator: e_o simple_express
 expression_operator ::=	EQUAL: equal 
 			{:
 				RESULT = equal ;
-				/*System.out.println(RESULT);*/
 			:}
 			| UNEQUAL: unequal
 			{:
 				RESULT = unequal ;
-				/*System.out.println(RESULT);*/
 			:} 
 			| LESS: less
 			{:
+				// "&lt"表示小于号<,直接些"<"在流程图中无法显示
 				RESULT = "&lt" ;
-				/*System.out.println(RESULT);*/
 			:}
 			| LESS_EQUAL: less_equal
 			{:
 				RESULT = less_equal ;
-				/*System.out.println(RESULT);*/
 			:}
 			| GREAT: great
 			{:
 				RESULT = "&gt" ;
-				/*System.out.println(RESULT);*/
 			:}
 			| GREAT_EQUAL:great_less
 			{:
 				RESULT = great_less ;
-				/*System.out.println(RESULT);*/
 			:};
 
 simple_expression ::=	simple_expression: s_e simple_expression_operator: s_e_o term: t
 			{:
 				RESULT = s_e  + " " + s_e_o  + " " + t ;
-				/*System.out.println(RESULT);*/
 			:}
 			| signed_operator: s_o term: t
 			{:
@@ -656,13 +655,10 @@ simple_expression ::=	simple_expression: s_e simple_expression_operator: s_e_o t
 signed_operator ::=	PLUS: plus
 			{:
 				RESULT = plus ;
-				/*System.out.println(RESULT);*/
-				
 			:}
 			| MINUS: minus
 			{:
 				RESULT = minus ;
-				/*System.out.println(RESULT);*/
 			:}
 			| /*epsilon*/
 			{:
@@ -672,24 +668,19 @@ signed_operator ::=	PLUS: plus
 simple_expression_operator ::=	PLUS: plus
 				{:
 					RESULT = plus ;
-					/*System.out.println(RESULT);*/
-				
 				:}	
 				| MINUS: minus
 				{:
 					RESULT = minus ;
-					/*System.out.println(RESULT);*/
 				:}
 				| OR: or
 				{:
-					/*RESULT = or ;*/
-					/*System.out.println(RESULT);*/
+					RESULT = or ;
 				:};
 
 term ::=		term: t term_operator: t_o factor: f
 			{:
 				RESULT = t  + " " + t_o  + " " + f ;
-				/*System.out.println(RESULT);*/
 			:}
 			| factor: f
 			{:
@@ -708,28 +699,23 @@ term ::=		term: t term_operator: t_o factor: f
 term_operator ::=	TIMES: times
 			{:
 				RESULT = times ;
-				/*System.out.println(RESULT);*/
 			:}
 			| DIVIDE: divides
 			{:
 				RESULT = divides ;
-				/*System.out.println(RESULT);*/
 			:}
 			| MOD: mod
 			{:
 				RESULT = mod ;
-				/*System.out.println(RESULT);*/
 			:}
 			| AND: and
 			{:
 				RESULT = and ;
-				/*System.out.println(RESULT);*/
 			:};
 
 factor ::=		IDENTIFIER: identifier selector: s
 			{:
 				RESULT = identifier  + s ;
-				/*System.out.println(RESULT);*/
 			:}
 			| NUMBER: number
 			{:
@@ -739,28 +725,23 @@ factor ::=		IDENTIFIER: identifier selector: s
 			| LPARENTHESES: lparen expression: e RPARENTHESES: rparen
 			{:
 				RESULT = lparen  + e  + rparen ;
-				/*System.out.println(RESULT);*/
 			:}
 			| NOT: not factor: f
 			{:
 				RESULT = not  + f ;
-				/*System.out.println(RESULT);*/
 			:};
 
 
 selector ::=		selector: s DOT: dot IDENTIFIER: identifier
 			{:
 				RESULT = s  + dot  + identifier ;
-				/*System.out.println(RESULT);*/
 			:}
 			| selector:s LBRACKET: lbracket expression: e RBRACKET: rbracket
 			{:
 				RESULT = s + lbracket + e + rbracket ;
-				/*System.out.println(RESULT);*/
 			:}
 			| /*epsilon*/
 			{:
 				RESULT = "";
-				/*System.out.println(RESULT);*/
 			:};
 
